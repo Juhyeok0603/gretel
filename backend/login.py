@@ -1,0 +1,130 @@
+from fastapi import APIRouter, Form
+import pymysql
+from dotenv import load_dotenv
+import os
+from passlib.hash import bcrypt
+from fastapi.responses import HTMLResponse
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+import requests
+
+from fastapi.responses import RedirectResponse
+
+router = APIRouter()
+load_dotenv() # .env 파일 로드
+
+# DB 연결 설정
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER") 
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+
+connection=pymysql.connect(
+    host=DB_HOST,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    database=DB_NAME,
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
+
+cursor = connection.cursor()
+
+# 템플릿 설정
+templates = Jinja2Templates(directory="templates")
+
+# 도메인
+DOMAIN=os.getenv("DOMAIN")
+
+# 카카오 로그인 env
+KAKAO_REST_API_KEY=os.getenv("KAKAO_REST_API_KEY")
+KAKAO_CLIENT_SECRET=os.getenv("KAKAO_CLIENT_SECRET")
+kauth_host="https://kauth.kakao.com"
+kapi_host="https://kapi.kakao.com"
+redirect_uri=DOMAIN+"/login/kakao/redirect"
+
+# 로그인 성공 및 실패 메시지
+login_success = "<script>alert('로그인성공'); window.location.href='./';</script>"
+login_fail = "<script>alert('로그인 실패'); window.location.href='./login';</script>"
+
+@router.post("/login")
+async def login(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...)
+    ):
+    print(f"email:{email}, password:{password}")
+    try:
+        sql = "SELECT * FROM users WHERE email=%s"
+        cursor.execute(sql,(email))
+        result = cursor.fetchone()
+        if result is None:
+            return HTMLResponse(
+                content=login_fail
+            )
+    except Exception as e:
+        print(f"Error: {e}")
+        return HTMLResponse( login_fail)
+    try:
+        pw_sql="SELECT username,password FROM users WHERE email=%s"
+        cursor.execute(pw_sql, (email))
+        result=cursor.fetchone()
+        hashed_password=result['password']
+        username = result['username']
+        if bcrypt.verify(password, hashed_password):
+            request.session['user']=username
+            return templates.TemplateResponse("index.html", {"request": request, "message": "로그인 성공", "username": username})
+        else:
+            return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = './login';</script>")
+    except Exception as e:
+        print(f"Error: {e}")
+        return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = '/login';</script>")
+
+
+@router.get("/logout")
+async def logout(request: Request):
+    try:
+        headers = {'Authorization': f'Bearer {request.session.get("access_token")}'}
+        res = requests.post(kapi_host+"/v1/user/logout", headers=headers)
+        print("Kakao logout response:", res.json())
+        request.session.clear()  # 세션 데이터 삭제
+        return HTMLResponse(content="<script>window.location.href = './';</script>")
+    except Exception as e:
+        print(f"Error during logout: {e}")
+        return HTMLResponse(content="<script>alert('로그아웃 실패'); window.location.href = './';</script>")
+
+# 카카오 로그인 라우트
+@router.get("/login/kakao")
+async def kakao_login():
+    kakao_login_url=f"{kauth_host}/oauth/authorize?response_type=code&client_id={KAKAO_REST_API_KEY}&redirect_uri={redirect_uri}"
+    return RedirectResponse(kakao_login_url)
+
+@router.get("/login/kakao/redirect")
+async def kakao_login_redirect(request: Request, code: str):
+    try:
+        data = {
+            "grant_type": "authorization_code",
+            "client_id": KAKAO_REST_API_KEY,
+            "client_secret": KAKAO_CLIENT_SECRET,
+            "redirect_uri": redirect_uri,
+            "code":code
+        }
+        res = requests.post(f"{kauth_host}/oauth/token", data=data)
+        token_json = res.json()
+        access_token = token_json.get("access_token")
+        if not access_token:
+            return HTMLResponse(content=login_fail)
+        headers={
+            "Authorization": f"Bearer {access_token}"
+        }
+        res = requests.get(kapi_host+"/v2/user/me", headers=headers)
+        profile_json = res.json()
+        print(profile_json)
+        username = profile_json["kakao_account"]["profile"]["nickname"]
+        request.session["access_token"] = access_token
+        request.session["user"] = username
+        return RedirectResponse("/")
+    except Exception as e:
+        print(f"Error during Kakao login: {e}")
+        return HTMLResponse(content=login_fail)

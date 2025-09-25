@@ -1,0 +1,13 @@
+.mypage-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+}
+.mypage-btn:hover {
+    background-color: #717171;
+}
