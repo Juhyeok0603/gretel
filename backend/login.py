@@ -40,8 +40,11 @@ DOMAIN=os.getenv("DOMAIN")
 # 카카오 로그인 env
 KAKAO_REST_API_KEY=os.getenv("KAKAO_REST_API_KEY")
 KAKAO_CLIENT_SECRET=os.getenv("KAKAO_CLIENT_SECRET")
+# 카카오 인증 호스트
 kauth_host="https://kauth.kakao.com"
+# 카카오 API 호스트(사용자 정보, 로그아웃, 연결끊기 등)
 kapi_host="https://kapi.kakao.com"
+# 리다이렉트 경로
 redirect_uri=DOMAIN+"/login/kakao/redirect"
 
 # 로그인 성공 및 실패 메시지
@@ -67,13 +70,14 @@ async def login(
         print(f"Error: {e}")
         return HTMLResponse( login_fail)
     try:
-        pw_sql="SELECT username,password FROM users WHERE email=%s"
+        pw_sql="SELECT username,password,id FROM users WHERE email=%s"
         cursor.execute(pw_sql, (email))
         result=cursor.fetchone()
         hashed_password=result['password']
         username = result['username']
         if bcrypt.verify(password, hashed_password):
             request.session['user']=username
+            request.session['user_id']=result['id']
             return templates.TemplateResponse("index.html", {"request": request, "message": "로그인 성공", "username": username})
         else:
             return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = './login';</script>")
@@ -121,9 +125,30 @@ async def kakao_login_redirect(request: Request, code: str):
         res = requests.get(kapi_host+"/v2/user/me", headers=headers)
         profile_json = res.json()
         print(profile_json)
+        print("kakao_id:", profile_json["id"])
+        kakao_id = profile_json["id"]
         username = profile_json["kakao_account"]["profile"]["nickname"]
+        cursor.execute("SELECT * FROM users WHERE kakao_id=%s", (kakao_id))
+        result = cursor.fetchone()
+        if result is None:
+            try:
+                cursor.execute("INSERT INTO users (username, kakao_id) VALUES (%s, %s)", (username, kakao_id))
+                cursor.execute("SELECT id FROM users WHERE kakao_id=%s", (kakao_id))
+                user_id = cursor.fetchone()['id']
+                request.session["user_id"] = user_id
+                connection.commit()
+                print(f"{username}이 카카오로 회원가입")
+            except Exception as e:
+                print(f"Error: {e}")
+                connection.rollback()
+        else:
+            user_id = result['id']
+            request.session["user_id"] = user_id
+            print(f"{username}이 카카오로 로그인")
         request.session["access_token"] = access_token
         request.session["user"] = username
+        cursor.close()
+        connection.close()
         return RedirectResponse("/")
     except Exception as e:
         print(f"Error during Kakao login: {e}")

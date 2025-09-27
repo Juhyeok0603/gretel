@@ -5,6 +5,7 @@ import os
 from passlib.hash import bcrypt
 from fastapi.responses import HTMLResponse
 from fastapi import Request
+from fastapi.templating import Jinja2Templates
 
 
 # 이메일 인증용
@@ -12,9 +13,11 @@ import secrets
 import smtplib
 from email.mime.text import MIMEText
 
-
 router = APIRouter()
 load_dotenv() # .env 파일 로드
+
+# 템플릿 설정
+templates = Jinja2Templates(directory="templates")
 
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
@@ -42,6 +45,9 @@ async def users(request:Request,
     password: str = Form(...)
     ):
     print(f"Received user: {username, email, password}")  # 터미널에 출력
+
+    if not username or not email or not password:
+        return templates.TemplateResponse("sign_up.html", {"request": request, "error": "모든 항목을 채워주세요"})
 
     # 비밀번호 해싱
     password_hash = bcrypt.hash(password)
