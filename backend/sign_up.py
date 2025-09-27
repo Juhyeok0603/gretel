@@ -34,8 +34,6 @@ connection = pymysql.connect(
 )
 cursor = connection.cursor()
 
-# 이메일 인증 함수
-
 
 @router.post("/sign_up")
 async def users(request:Request,
