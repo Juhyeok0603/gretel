@@ -70,14 +70,15 @@ async def login(
         print(f"Error: {e}")
         return HTMLResponse( login_fail)
     try:
-        pw_sql="SELECT username,password,id FROM users WHERE email=%s"
+        pw_sql="SELECT user_id,username,password,id FROM users WHERE email=%s"
         cursor.execute(pw_sql, (email))
         result=cursor.fetchone()
         hashed_password=result['password']
         username = result['username']
+        user_id = result['id']
         if bcrypt.verify(password, hashed_password):
             request.session['user']=username
-            request.session['user_id']=result['id']
+            request.session['user_id']=user_id
             return templates.TemplateResponse("index.html", {"request": request, "message": "로그인 성공", "username": username})
         else:
             return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = './login';</script>")
@@ -89,7 +90,15 @@ async def login(
 @router.get("/logout")
 async def logout(request: Request):
     try:
-        headers = {'Authorization': f'Bearer {request.session.get("access_token")}'}
+        user_id=request.session.get("user_id")
+        if not user_id:
+            return HTMLResponse(content="<script>alert('로그아웃 실패: 사용자 정보 없음'); window.location.href = './';</script>")
+        cursor.execute("SELECT * FROM users WHERE id=%s", (user_id))
+        result = cursor.fetchone()
+        if result is None:
+            return HTMLResponse(content="<script>alert('로그아웃 실패: 사용자 정보 없음'); window.location.href = './';</script>")
+        access_token = result["access_token"]
+        headers = {'Authorization': f'Bearer {access_token}'}
         res = requests.post(kapi_host+"/v1/user/logout", headers=headers)
         print("Kakao logout response:", res.json())
         request.session.clear()  # 세션 데이터 삭제
@@ -128,13 +137,14 @@ async def kakao_login_redirect(request: Request, code: str):
         print("kakao_id:", profile_json["id"])
         kakao_id = profile_json["id"]
         username = profile_json["kakao_account"]["profile"]["nickname"]
+
         cursor.execute("SELECT * FROM users WHERE kakao_id=%s", (kakao_id))
         result = cursor.fetchone()
         if result is None:
             try:
-                cursor.execute("INSERT INTO users (username, kakao_id) VALUES (%s, %s)", (username, kakao_id))
-                cursor.execute("SELECT id FROM users WHERE kakao_id=%s", (kakao_id))
-                user_id = cursor.fetchone()['id']
+                cursor.execute("INSERT INTO users (username, kakao_id, access_token) VALUES (%s, %s, %s)", (username, kakao_id, access_token))
+                user_id = cursor.lastrowid
+                print(user_id)
                 request.session["user_id"] = user_id
                 connection.commit()
                 print(f"{username}이 카카오로 회원가입")
@@ -145,8 +155,7 @@ async def kakao_login_redirect(request: Request, code: str):
             user_id = result['id']
             request.session["user_id"] = user_id
             print(f"{username}이 카카오로 로그인")
-        request.session["access_token"] = access_token
-        request.session["user"] = username
+            request.session["user"] = username
         cursor.close()
         connection.close()
         return RedirectResponse("/")
