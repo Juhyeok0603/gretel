@@ -8,12 +8,17 @@
     <link rel="stylesheet" href="{{url_for('static',path='css/index.css')}}">
 </head>
 <body>
-    {% if request.session.get("user_id") %}
-        <div class='mypage-btn' onclick="location.href='/mypage'">마이페이지</div>
+    <nav>
+        <a href="/">Home</a> |
+        <a href="/about">검색</a> |
+        <a href="/contact">장바구니</a> |
+        <a href="/mypage">My Page</a>
+        {% if request.session.get("user_id") %}
         <a href="./logout">로그아웃</a>
-        <a href="./unlink">회원탈퇴</a>
     {% else %}
         <a href="./login">로그인/회원가입</a>
     {% endif %}
+    </nav>
+        
 </body>
 </html>

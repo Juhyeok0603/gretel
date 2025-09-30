@@ -3,9 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',path='css/mypage.css')}}">
     <title>mypage</title>
 </head>
 <body>
-    
+    <nav>
+        <a href="/">Home</a> |
+        <a href="/about">검색</a> |
+        <a href="/contact">장바구니</a> |
+        <a href="/mypage">My Page</a>
+        {% if request.session.get("user_id") %}
+        <a href="./logout">로그아웃</a>
+    {% else %}
+        <a href="./login">로그인/회원가입</a>
+    {% endif %}
+    </nav>
+    <div>
+        {% if username %}
+        <h1>{{ username }}님의 페이지</h1>
+        {% else %}
+        <h1><a href='./login'>로그인하기</a></h1>
+        {% endif %}
+        <a><div class='mypage-menu'>주문내역</div></a><br>
+        <a><div class='mypage-menu'>취소/반품/교환</div></a><br>
+        <a><div class='mypage-menu'>찜한상품</div></a><br>
+
+        <a href="./unlink">회원탈퇴</a>
+    </div>
 </body>
 </html>

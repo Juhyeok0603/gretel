@@ -1,0 +1,30 @@
+  .menu-container {
+    display: flex;
+    flex-direction: column;
+    width: 250px;           /* 메뉴 전체 너비 */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+
+  .menu-item {
+    display: block;
+    padding: 15px;
+    cursor: pointer;
+    background-color: #f8f8f8;
+    transition: background-color 0.2s;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    user-select: none;      /* 드래그 방지 */
+    -webkit-user-select: none; /* Safari 대응 */
+  }
+
+  .menu-item:hover {
+    background-color: #e0e0e0;
+  }
+
+  .menu-item:not(:last-child) {
+    border-bottom: 1px solid #ddd;
+  }

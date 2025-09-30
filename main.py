@@ -30,11 +30,14 @@ async def home(request: Request):
 @app.get("/login", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
+# 마이페이지 라우트는 mypage.py에서
+from backend.mypage import get_user_name
 @app.get("/mypage", response_class=HTMLResponse)
 async def mypage(request: Request):
-    if not request.session.get("user"):
-        return HTMLResponse( content="<script>alert('로그인 후 이용해주세요'); window.location.href = '/';</script>")
-    return templates.TemplateResponse("mypage.html", {"request": request, "username": request.session.get("user")})
+    username = get_user_name(request)
+    print(username)
+    return templates.TemplateResponse("mypage.html", {"request": request, "username": username})
 
 
 
