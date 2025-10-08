@@ -6,8 +6,10 @@ from fastapi.responses import HTMLResponse
 from fastapi import Request
 import requests
 
+from fastapi.responses import RedirectResponse
 router = APIRouter()
 load_dotenv() # .env 파일 로드
+
 
 
 DB_HOST = os.getenv("DB_HOST")
@@ -45,22 +47,24 @@ async def unlink(request: Request):
     try:
         user_id = request.session.get("user_id")
         if user_id:
-            cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
-            result = cursor.fetchone()
-            if result is None:
-                print(f"No user found with ID {user_id}")
-                return HTMLResponse(content="<script>alert('회원탈퇴 실패: 사용자 정보 없음'); window.location.href = './';</script>")
-            access_token = result['access_token']
-            cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
-            connection.commit()
-            if access_token:
-                print(f"Access token found for user ID {user_id}, proceeding to unlink from Kakao.")
-                headers = {'Authorization': f'Bearer {access_token}'}
-                res = requests.post(kapi_host+"/v1/user/unlink", headers=headers)
-                print("Kakao unlink response:", res.json())
-            print(f"User with ID {user_id} has been deleted from the database.")
-            request.session.clear()  # 세션 데이터 삭제
-            return HTMLResponse(content="<script>window.location.href = './';</script>")
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+                result = cursor.fetchone()
+                if result is None:
+                    print(f"No user found with ID {user_id}")
+                    return HTMLResponse(content="<script>alert('회원탈퇴 실패: 사용자 정보 없음'); window.location.href = './';</script>")
+                access_token = result['access_token']
+                if access_token:
+                    print(f"Access token found for user ID {user_id}, proceeding to unlink from Kakao.")
+                    headers = {'Authorization': f'Bearer {access_token}'}
+                    res = requests.post(kapi_host+"/v1/user/unlink", headers=headers)
+                    print("Kakao unlink response:", res.json())
+                cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
+                connection.commit()
+                print(f"User with ID {user_id} has been deleted from the database.")
+                request.session.clear()  # 세션 데이터 삭제
+                response = RedirectResponse(url="/", status_code=303)
+                return response
         else:
             print("No user_id found in session.")
             return HTMLResponse(content="<script>alert('회원탈퇴 실패: 사용자 정보 없음'); window.location.href = './';</script>")

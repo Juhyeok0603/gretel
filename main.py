@@ -31,11 +31,21 @@ async def home(request: Request):
 async def home(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+
+# 상품 상세 페이지
+@app.get("/products", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("products.html", {"request": request})
+
 # 마이페이지 라우트는 mypage.py에서
 from backend.mypage import get_user_name
 @app.get("/mypage", response_class=HTMLResponse)
 async def mypage(request: Request):
-    username = get_user_name(request)
+    user_id = request.session.get("user_id")
+    if user_id:
+        username = get_user_name(user_id)
+    else:
+        username= None
     print(username)
     return templates.TemplateResponse("mypage.html", {"request": request, "username": username})
 

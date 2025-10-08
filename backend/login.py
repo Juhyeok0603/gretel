@@ -29,7 +29,6 @@ connection=pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor
 )
 
-cursor = connection.cursor()
 
 # 템플릿 설정
 templates = Jinja2Templates(directory="templates")
@@ -60,28 +59,30 @@ async def login(
     print(f"email:{email}, password:{password}")
     try:
         sql = "SELECT * FROM users WHERE email=%s"
-        cursor.execute(sql,(email))
-        result = cursor.fetchone()
-        if result is None:
-            return HTMLResponse(
-                content=login_fail
-            )
+        with connection.cursor() as cursor:
+            cursor.execute(sql,(email))
+            result = cursor.fetchone()
+            if result is None:
+                return HTMLResponse(
+                    content=login_fail
+                )
     except Exception as e:
         print(f"Error: {e}")
         return HTMLResponse( login_fail)
     try:
         pw_sql="SELECT user_id,username,password,id FROM users WHERE email=%s"
-        cursor.execute(pw_sql, (email))
-        result=cursor.fetchone()
-        hashed_password=result['password']
-        username = result['username']
-        user_id = result['id']
-        if bcrypt.verify(password, hashed_password):
-            request.session['user']=username
-            request.session['user_id']=user_id
-            return templates.TemplateResponse("index.html", {"request": request, "message": "로그인 성공", "username": username})
-        else:
-            return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = './login';</script>")
+        with connection.cursor() as cursor:
+            cursor.execute(pw_sql, (email))
+            result=cursor.fetchone()
+            hashed_password=result['password']
+            username = result['username']
+            user_id = result['id']
+            if bcrypt.verify(password, hashed_password):
+                request.session['user']=username
+                request.session['user_id']=user_id
+                return templates.TemplateResponse("index.html", {"request": request, "message": "로그인 성공", "username": username})
+            else:
+                return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = './login';</script>")
     except Exception as e:
         print(f"Error: {e}")
         return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = '/login';</script>")
@@ -93,16 +94,18 @@ async def logout(request: Request):
         user_id=request.session.get("user_id")
         if not user_id:
             return HTMLResponse(content="<script>alert('로그아웃 실패: 사용자 정보 없음'); window.location.href = './';</script>")
-        cursor.execute("SELECT * FROM users WHERE id=%s", (user_id))
-        result = cursor.fetchone()
-        if result is None:
-            return HTMLResponse(content="<script>alert('로그아웃 실패: 사용자 정보 없음'); window.location.href = './';</script>")
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE id=%s", (user_id))
+            result = cursor.fetchone()
+            if result is None:
+                return HTMLResponse(content="<script>alert('로그아웃 실패: 사용자 정보 없음'); window.location.href = './';</script>")
         access_token = result["access_token"]
         headers = {'Authorization': f'Bearer {access_token}'}
         res = requests.post(kapi_host+"/v1/user/logout", headers=headers)
         print("Kakao logout response:", res.json())
         request.session.clear()  # 세션 데이터 삭제
-        return HTMLResponse(content="<script>window.location.href = './';</script>")
+        response = RedirectResponse(url="/", status_code=303)
+        return response
     except Exception as e:
         print(f"Error during logout: {e}")
         return HTMLResponse(content="<script>alert('로그아웃 실패'); window.location.href = './';</script>")
@@ -138,27 +141,29 @@ async def kakao_login_redirect(request: Request, code: str):
         kakao_id = profile_json["id"]
         username = profile_json["kakao_account"]["profile"]["nickname"]
 
-        cursor.execute("SELECT * FROM users WHERE kakao_id=%s", (kakao_id))
-        result = cursor.fetchone()
-        if result is None:
-            try:
-                cursor.execute("INSERT INTO users (username, kakao_id, access_token) VALUES (%s, %s, %s)", (username, kakao_id, access_token))
-                user_id = cursor.lastrowid
-                print(user_id)
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE kakao_id=%s", (kakao_id,))
+            result = cursor.fetchone()
+            print("kakao_id:", kakao_id)
+            print("dbresult:", result)
+            if result is None:
+                try:
+                    cursor.execute("INSERT INTO users (username, kakao_id, access_token) VALUES (%s, %s, %s)", (username, kakao_id, access_token))
+                    user_id = cursor.lastrowid
+                    print(user_id)
+                    request.session["user_id"] = user_id
+                    request.session["user"] = username
+                    connection.commit()
+                    print(f"{username}이 카카오로 회원가입")
+                except Exception as e:
+                    print(f"Error: {e}")
+                    connection.rollback()
+            else:
+                user_id = result['id']
                 request.session["user_id"] = user_id
-                connection.commit()
-                print(f"{username}이 카카오로 회원가입")
-            except Exception as e:
-                print(f"Error: {e}")
-                connection.rollback()
-        else:
-            user_id = result['id']
-            request.session["user_id"] = user_id
-            print(f"{username}이 카카오로 로그인")
-            request.session["user"] = username
-        cursor.close()
-        connection.close()
-        return RedirectResponse("/")
+                print(f"{username}이 카카오로 로그인")
+                request.session["user"] = username
+            return RedirectResponse("/")
     except Exception as e:
         print(f"Error during Kakao login: {e}")
         return HTMLResponse(content=login_fail)

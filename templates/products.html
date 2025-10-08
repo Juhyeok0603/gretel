@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>베이직 컴포트 코튼 자켓 - 상품 페이지</title>
+    <link rel="stylesheet" href="{{url_for('static', path='../static/css/products.css')}}">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">GreTel</a>
+            
+            <div class="nav-links">
+                <a href="/" class="active">Home</a>
+                <a href="/about">검색</a>
+                <a href="/cart">장바구니</a>
+                <a href="/mypage">My Page</a>
+                {% if request.session.get("user_id") %}
+                <a href="./logout">로그아웃</a>
+                {% else %}
+                <a href="./login">로그인/회원가입</a>
+                {% endif %}
+            </div>
+
+
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="product-layout">
+            <!-- 왼쪽 영역 (70%) -->
+            <div class="left-section">
+                <!-- 상품 이미지 -->
+                <div class="product-images">
+                    <div class="main-image">
+                        <img id="mainImage" src="https://images.unsplash.com/photo-1562572159-4efc207f5aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjBtb2RlbHxlbnwxfHx8fDE3NTk2NTAyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 메인 이미지">
+                    </div>
+                    <div class="thumbnail-grid">
+                        <div class="thumbnail active" onclick="selectImage(0)">
+                            <img src="https://images.unsplash.com/photo-1562572159-4efc207f5aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjBtb2RlbHxlbnwxfHx8fDE3NTk2NTAyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 1">
+                        </div>
+                        <div class="thumbnail" onclick="selectImage(1)">
+                            <img src="https://images.unsplash.com/photo-1639270601211-9265bafae0f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHlsaXNoJTIwamFja2V0JTIwY2xvc2V1cHxlbnwxfHx8fDE3NTk2NzAzOTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 2">
+                        </div>
+                        <div class="thumbnail" onclick="selectImage(2)">
+                            <img src="https://images.unsplash.com/photo-1640336437301-8368b53861ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMGRldGFpbCUyMHRleHR1cmV8ZW58MXx8fHwxNzU5NjcwMzk4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 3">
+                        </div>
+                        <div class="thumbnail" onclick="selectImage(3)">
+                            <img src="https://images.unsplash.com/photo-1736956979752-d24513427817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbGlmZXN0eWxlJTIwd2VhcnxlbnwxfHx8fDE3NTk2NzAzOTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 4">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 탭 섹션 -->
+                <div class="tabs">
+                    <div class="tab-list">
+                        <button class="tab-button active" onclick="showTab('info')">상품정보</button>
+                        <button class="tab-button" onclick="showTab('reviews')">리뷰</button>
+                    </div>
+
+                    <!-- 상품정보 탭 -->
+                    <div id="info" class="tab-content active">
+                        <div class="product-info">
+                            <div>
+                                <h1 class="product-title">베이직 컴포트 코튼 자켓</h1>
+                                <span class="badge">베스트셀러</span>
+                                <p class="product-description">
+                                    부드러운 코튼 소재로 제작된 베이직 자켓입니다. 깔끔한 디자인과 편안한 착용감으로 일상생활부터 가벼운 외출까지 다양한 상황에서 활용하실 수 있습니다. 심플하면서도 세련된 실루엣으로 어떤 스타일과도 잘 어울립니다.
+                                </p>
+                            </div>
+
+                            <div class="separator"></div>
+
+                            <div class="info-section">
+                                <h3 class="section-title">상품 정보</h3>
+                                <div class="info-row">
+                                    <span class="info-label">소재</span>
+                                    <span>코튼 100%</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">원산지</span>
+                                    <span>대한민국</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">세탁방법</span>
+                                    <span>세탁기 세탁 가능, 저온 건조</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">모델정보</span>
+                                    <span>170cm, 55kg 착용 (M 사이즈)</span>
+                                </div>
+                            </div>
+
+                            <div class="separator"></div>
+
+                            <div class="info-section">
+                                <h3 class="section-title">사이즈 가이드</h3>
+                                <table class="size-table">
+                                    <thead>
+                                        <tr>
+                                            <th>사이즈</th>
+                                            <th>어깨너비</th>
+                                            <th>가슴둘레</th>
+                                            <th>총기장</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>S</td>
+                                            <td>42cm</td>
+                                            <td>96cm</td>
+                                            <td>64cm</td>
+                                        </tr>
+                                        <tr>
+                                            <td>M</td>
+                                            <td>44cm</td>
+                                            <td>100cm</td>
+                                            <td>66cm</td>
+                                        </tr>
+                                        <tr>
+                                            <td>L</td>
+                                            <td>46cm</td>
+                                            <td>104cm</td>
+                                            <td>68cm</td>
+                                        </tr>
+                                        <tr>
+                                            <td>XL</td>
+                                            <td>48cm</td>
+                                            <td>108cm</td>
+                                            <td>70cm</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 리뷰 탭 -->
+                    <div id="reviews" class="tab-content">
+                        <div class="reviews-header">
+                            <h3 class="section-title">리뷰 (3)</h3>
+                            <div class="stars">
+                                <div style="display: flex;">
+                                    <svg class="star filled" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <svg class="star filled" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <svg class="star filled" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <svg class="star filled" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <svg class="star filled" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                </div>
+                                <span>4.7 (3)</span>
+                            </div>
+                        </div>
+
+                        <div class="separator"></div>
+
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="avatar">김</div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-size: 14px;">김**</span>
+                                        <span class="badge" style="font-size: 10px;">구매확인</span>
+                                    </div>
+                                    <div class="review-meta">
+                                        <div style="display: flex;">
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                        </div>
+                                        <span>2024.12.15 • 사이즈 M</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="review-content">정말 만족스러�� 제품입니다. 원단이 부드럽고 핏이 완벽해요. 추천합니다!</p>
+                        </div>
+
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="avatar">이</div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-size: 14px;">이**</span>
+                                        <span class="badge" style="font-size: 10px;">구매확인</span>
+                                    </div>
+                                    <div class="review-meta">
+                                        <div style="display: flex;">
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star empty" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                        </div>
+                                        <span>2024.12.10 • 사이즈 L</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="review-content">디자인이 예쁘고 색상도 ��면과 똑같아요. 다만 조금 작은 느낌이라 한 사이즈 크게 주문하시는 걸 추천해요.</p>
+                        </div>
+
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="avatar">박</div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-size: 14px;">박**</span>
+                                        <span class="badge" style="font-size: 10px;">구매확인</span>
+                                    </div>
+                                    <div class="review-meta">
+                                        <div style="display: flex;">
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                        </div>
+                                        <span>2024.12.05 • 사이즈 S</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="review-content">배송도 빠르고 품질도 좋습니다. 재구매 의사 있어요!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오른쪽 영역 (30%) -->
+            <div class="right-section">
+                <div class="purchase-section">
+                    <!-- 가격 정보 -->
+                    <div class="price-section">
+                        <div class="price">
+                            <span>89,000원</span>
+                            <span class="discount-badge">31%</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                            <span class="original-price">129,000원</span>
+                            <span class="discount-amount">40,000원 할인</span>
+                        </div>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <!-- 사이즈 선택 -->
+                    <div class="form-group">
+                        <label class="form-label">사이즈</label>
+                        <div class="size-options">
+                            <button class="size-option" onclick="selectSize('S')">S</button>
+                            <button class="size-option" onclick="selectSize('M')">M</button>
+                            <button class="size-option" onclick="selectSize('L')">L</button>
+                            <button class="size-option" onclick="selectSize('XL')">XL</button>
+                        </div>
+                    </div>
+
+                    <!-- 수량 선택 -->
+                    <div class="form-group">
+                        <label class="form-label">수량</label>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="changeQuantity(-1)" id="decreaseBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M19 13H5v-2h14v2z"/>
+                                </svg>
+                            </button>
+                            <span class="quantity-display" id="quantity">1</span>
+                            <button class="quantity-btn" onclick="changeQuantity(1)">
+                                <svg width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <!-- 총 금액 -->
+                    <div class="total-price">
+                        <span>총 상품금액</span>
+                        <span id="totalPrice">89,000원</span>
+                    </div>
+
+                    <!-- 구매 버튼들 -->
+                    <button class="btn btn-primary" id="buyBtn" disabled>바로구매</button>
+                    <button class="btn btn-outline" id="cartBtn" disabled>장바구니</button>
+
+                    <!-- 액션 버튼들 -->
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="toggleWishlist()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" class="heart-icon" id="heartIcon">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                            찜
+                        </button>
+                        <button class="action-btn" onclick="shareProduct()">
+                            <svg width="16" height="16" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92S19.61 16.08 18 16.08z"/>
+                            </svg>
+                            공유
+                        </button>
+                    </div>
+
+                    <!-- 배송 정보 -->
+                    <div class="shipping-info">
+                        <div class="shipping-row">
+                            <span>배송비</span>
+                            <span>무료배송</span>
+                        </div>
+                        <div class="shipping-row">
+                            <span>배송예정</span>
+                            <span>12/07(토) 도착예정</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 상품 이미지 배열
+        const productImages = [
+            'https://images.unsplash.com/photo-1562572159-4efc207f5aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjBtb2RlbHxlbnwxfHx8fDE3NTk2NTAyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+            'https://images.unsplash.com/photo-1639270601211-9265bafae0f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHlsaXNoJTIwamFja2V0JTIwY2xvc2V1cHxlbnwxfHx8fDE3NTk2NzAzOTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+            'https://images.unsplash.com/photo-1640336437301-8368b53861ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMGRldGFpbCUyMHRleHR1cmV8ZW58MXx8fHwxNzU5NjcwMzk4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+            'https://images.unsplash.com/photo-1736956979752-d24513427817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbGlmZXN0eWxlJTIwd2VhcnxlbnwxfHx8fDE3NTk2NzAzOTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+        ];
+
+        // 상태 변수들
+        let selectedImageIndex = 0;
+        let selectedSize = '';
+        let quantity = 1;
+        let isWishlisted = false;
+        const basePrice = 89000;
+        
+
+        // 이미지 선택 함수
+        function selectImage(index) {
+            selectedImageIndex = index;
+            document.getElementById('mainImage').src = productImages[index];
+            
+            // 썸네일 활성화 상태 업데이트
+            document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+        }
+
+        // 탭 전환 함수
+        function showTab(tabName) {
+            // 모든 탭 버튼의 active 클래스 제거
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 모든 탭 컨텐츠 숨기기
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 선택된 탭 버튼에 active 클래스 추가
+            event.target.classList.add('active');
+            
+            // 선택된 탭 컨텐츠 보이기
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // 사이즈 선택 함수
+        function selectSize(size) {
+            selectedSize = size;
+            
+            // 모든 사이즈 옵션의 selected 클래스 제거
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 선택된 사이즈에 selected 클래스 추가
+            event.target.classList.add('selected');
+            
+            // 구매 버튼 활성화
+            updateButtonStates();
+        }
+
+        // 수량 변경 함수
+        function changeQuantity(delta) {
+            const newQuantity = quantity + delta;
+            if (newQuantity >= 1) {
+                quantity = newQuantity;
+                document.getElementById('quantity').textContent = quantity;
+                updateTotalPrice();
+            }
+            
+            // 감소 버튼 비활성화 상태 업데이트
+            document.getElementById('decreaseBtn').disabled = quantity <= 1;
+        }
+
+        // 총 가격 업데이트
+        function updateTotalPrice() {
+            const total = basePrice * quantity;
+            document.getElementById('totalPrice').textContent = total.toLocaleString() + '원';
+        }
+
+        // 버튼 상태 업데이트
+        function updateButtonStates() {
+            const buyBtn = document.getElementById('buyBtn');
+            const cartBtn = document.getElementById('cartBtn');
+            const hasSize = selectedSize !== '';
+            
+            buyBtn.disabled = !hasSize;
+            cartBtn.disabled = !hasSize;
+        }
+
+        // 찜하기 토글
+        function toggleWishlist() {
+            isWishlisted = !isWishlisted;
+            const heartIcon = document.getElementById('heartIcon');
+            const heartPath = heartIcon.querySelector('path');
+            
+            if (isWishlisted) {
+                heartIcon.classList.add('active');
+                heartPath.setAttribute('fill', '#dc2626');
+                // localStorage에 찜 상태 저장
+                localStorage.setItem('isWishlisted', 'true');
+            } else {
+                heartIcon.classList.remove('active');
+                heartPath.setAttribute('fill', 'none');
+                heartPath.setAttribute('stroke', 'currentColor');
+                heartPath.setAttribute('stroke-width', '2');
+                localStorage.setItem('isWishlisted', 'false');
+            }
+        }
+
+        // 찜 상태 복원
+        function restoreWishlistState() {
+            const savedWishlist = localStorage.getItem('isWishlisted');
+            if (savedWishlist === 'true') {
+                isWishlisted = true;
+                const heartIcon = document.getElementById('heartIcon');
+                const heartPath = heartIcon.querySelector('path');
+                heartIcon.classList.add('active');
+                heartPath.setAttribute('fill', '#dc2626');
+            }
+        }
+
+        // 공유하기
+        function shareProduct() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '베이직 컴포트 코튼 자켓',
+                    text: '부드러운 코튼 소재로 제작된 베이직 자켓',
+                    url: window.location.href
+                });
+            } else {
+                // 폴백: 클립보드에 URL 복사
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('상품 링크가 클립보드에 복사되었습니다.');
+                });
+            }
+        }
+
+        // 구매하기 버튼 클릭 이벤트
+        document.getElementById('buyBtn').addEventListener('click', function() {
+            if (selectedSize) {
+                alert(`바로구매: ${selectedSize} 사이즈 ${quantity}개 - ${(basePrice * quantity).toLocaleString()}원`);
+            }
+        });
+
+        // 장바구니 버튼 클릭 이벤트
+        document.getElementById('cartBtn').addEventListener('click', function() {
+            if (selectedSize) {
+                alert(`장바구니에 추가: ${selectedSize} 사이즈 ${quantity}개`);
+            }
+        });
+
+        // 초기화
+        updateButtonStates();
+        updateTotalPrice();
+        updateUserSection();
+        restoreWishlistState();
+    </script>
+</body>
+</html>
