@@ -20,14 +20,16 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 
-connection=pymysql.connect(
-    host=DB_HOST,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    database=DB_NAME,
-    charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
-)
+def get_db_con():
+    return pymysql.connect(
+        host=DB_HOST,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME,
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor,
+        autocommit=False
+    )
 
 
 # 템플릿 설정
@@ -59,6 +61,7 @@ async def login(
     print(f"email:{email}, password:{password}")
     try:
         sql = "SELECT * FROM users WHERE email=%s"
+        connection = get_db_con()
         with connection.cursor() as cursor:
             cursor.execute(sql,(email))
             result = cursor.fetchone()
@@ -70,7 +73,8 @@ async def login(
         print(f"Error: {e}")
         return HTMLResponse( login_fail)
     try:
-        pw_sql="SELECT user_id,username,password,id FROM users WHERE email=%s"
+        pw_sql="SELECT id,username,password,id FROM users WHERE email=%s"
+        connection = get_db_con()
         with connection.cursor() as cursor:
             cursor.execute(pw_sql, (email))
             result=cursor.fetchone()
@@ -94,6 +98,7 @@ async def logout(request: Request):
         user_id=request.session.get("user_id")
         if not user_id:
             return HTMLResponse(content="<script>alert('로그아웃 실패: 사용자 정보 없음'); window.location.href = './';</script>")
+        connection = get_db_con()
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE id=%s", (user_id))
             result = cursor.fetchone()
@@ -140,7 +145,7 @@ async def kakao_login_redirect(request: Request, code: str):
         print("kakao_id:", profile_json["id"])
         kakao_id = profile_json["id"]
         username = profile_json["kakao_account"]["profile"]["nickname"]
-
+        connection = get_db_con()
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE kakao_id=%s", (kakao_id,))
             result = cursor.fetchone()
