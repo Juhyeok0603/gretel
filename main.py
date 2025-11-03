@@ -11,9 +11,15 @@ from fastapi.staticfiles import StaticFiles
 from backend.sign_up import router as sign_up_router
 from backend.login import router as login_router
 from backend.unlink import router as unlink_router
+from backend.products import router as products_router
+from backend.product_review import router as product_review_router
+from backend.product_size import router as product_size_router
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+
+# static 라우트
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # 세션 미들웨어 설정
 from starlette.middleware.sessions import SessionMiddleware
@@ -49,15 +55,26 @@ async def mypage(request: Request):
     print(username)
     return templates.TemplateResponse("mypage.html", {"request": request, "username": username})
 
-
-
-
+from backend.products import products_info
+from backend.product_review import product_reviews
+from backend.product_size import product_sizes
+@app.get("/product/{product_id}", response_class=HTMLResponse)
+async def products(request: Request, product_id: int):
+    print(product_id)
+    result = products_info(product_id)
+    print("this is ",result)
+    print(result['images_url'][0])
+    review = product_reviews(product_id)
+    print("reviews:", review)
+    print("reviwer1:", review[0]['username'])
+    sizes = product_sizes(product_id)
+    print("sizes:", sizes)
+    return templates.TemplateResponse("product_detail.html", {"request": request, "product": result, "review": review, "sizes": sizes})
 
 #라우터 등록
 app.include_router(sign_up_router)
 app.include_router(login_router)
 app.include_router(unlink_router)
-
-# css 라우트
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(products_router)
+app.include_router(product_review_router)
+app.include_router(product_size_router)
