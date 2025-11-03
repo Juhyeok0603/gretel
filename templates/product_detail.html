@@ -4,552 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>베이직 컴포트 코튼 자켓 - 상품 페이지</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #ffffff;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        .product-layout {
-            display: grid;
-            grid-template-columns: 7fr 3fr;
-            gap: 32px;
-        }
-
-        /* 이미지 갤러리 */
-        .product-images {
-            margin-bottom: 32px;
-        }
-
-        .main-image {
-            aspect-ratio: 1;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 16px;
-        }
-
-        .main-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .thumbnail-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-
-        .thumbnail {
-            aspect-ratio: 1;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .thumbnail:hover {
-            border-color: #d1d5db;
-        }
-
-        .thumbnail.active {
-            border-color: #000;
-        }
-
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* 탭 */
-        .tabs {
-            margin-top: 32px;
-        }
-
-        .tab-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-bottom: 1px solid #e5e7eb;
-            margin-bottom: 24px;
-        }
-
-        .tab-button {
-            padding: 12px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .tab-button.active {
-            border-bottom-color: #000;
-            color: #000;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* 상품 정보 */
-        .product-info {
-            margin: 4px 0;
-        }
-
-        .product-detail-image {
-            width: 100%;
-            display: block;
-            margin: 1px 0;
-        }
-
-        .product-title {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: #f3f4f6;
-            color: #374151;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-bottom: 16px;
-            font-weight: 500;
-        }
-
-        .badge.primary {
-            background-color: #000;
-            color: white;
-        }
-
-        .badge.secondary {
-            background-color: #e5e7eb;
-            color: #374151;
-        }
-
-        .product-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .product-description {
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
-
-        .separator {
-            height: 1px;
-            background-color: #e5e7eb;
-            margin: 24px 0;
-        }
-
-        .info-section {
-            margin-bottom: 24px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .info-label {
-            color: #6b7280;
-        }
-
-        .size-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
-        }
-
-        .size-table th,
-        .size-table td {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .size-table th {
-            font-weight: 600;
-        }
-
-        /* 리뷰 */
-        .reviews-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .stars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .star {
-            width: 16px;
-            height: 16px;
-        }
-
-        .star.filled {
-            color: #fbbf24;
-            fill: currentColor;
-        }
-
-        .star.empty {
-            color: #d1d5db;
-        }
-
-        .review-item {
-            margin-bottom: 24px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .review-item:last-child {
-            border-bottom: none;
-        }
-
-        .review-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .avatar {
-            width: 32px;
-            height: 32px;
-            background-color: #f3f4f6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .review-meta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
-        .review-content {
-            margin-left: 44px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        /* 구매 섹션 */
-        .purchase-section {
-            position: sticky;
-            top: 16px;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 24px;
-        }
-
-        .price-section {
-            margin-bottom: 24px;
-        }
-
-        .price {
-            font-size: 28px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .discount-badge {
-            background-color: #dc2626;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .original-price {
-            font-size: 14px;
-            color: #6b7280;
-            text-decoration: line-through;
-            margin-top: 4px;
-        }
-
-        .discount-amount {
-            font-size: 14px;
-            color: #dc2626;
-            margin-left: 8px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .size-select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            background: white;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .size-select:hover {
-            border-color: #6b7280;
-        }
-
-        .size-select:focus {
-            outline: none;
-            border-color: #000;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .total-price {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 24px 0;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 12px;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background-color: #000;
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background-color: #374151;
-        }
-
-        .btn-outline {
-            background-color: white;
-            border: 1px solid #d1d5db;
-            color: #374151;
-        }
-
-        .btn-outline:hover {
-            background-color: #f9fafb;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            background: white;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 14px;
-        }
-
-        .shipping-info {
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .shipping-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-
-        .heart-icon.active {
-            color: #dc2626 !important;
-        }
-
-        .heart-icon.active path {
-            fill: #dc2626;
-        }
-
-        .heart-icon {
-            transition: color 0.2s;
-        }
-
-        /* 네비게이션 스타일 */
-        nav {
-            background-color: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 16px 0;
-            margin-bottom: 24px;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #374151;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .nav-links a:hover {
-            background-color: #f3f4f6;
-            color: #000;
-        }
-
-        .nav-links a.active {
-            background-color: #000;
-            color: white;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 600;
-            color: #000;
-            text-decoration: none;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-section a {
-            text-decoration: none;
-            color: #374151;
-            font-weight: 500;
-            padding: 8px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .user-section a:hover {
-            background-color: #f9fafb;
-            border-color: #9ca3af;
-        }
-
-        .user-section a.logout {
-            background-color: #dc2626;
-            color: white;
-            border-color: #dc2626;
-        }
-
-        .user-section a.logout:hover {
-            background-color: #b91c1c;
-        }
-
-        @media (max-width: 768px) {
-            .product-layout {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            
-            .purchase-section {
-                position: static;
-            }
-
-            .nav-container {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 12px;
-            }
-
-            .nav-links a {
-                padding: 6px 12px;
-                font-size: 14px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../static/css/products.css">
 </head>
 <body>
     <!-- 네비게이션 -->
@@ -580,28 +35,26 @@
                 <div class="product-images">
                     <!-- 태그 -->
                     <div class="product-tags">
-                        <span class="badge primary">겨울</span>
-                        <span class="badge primary">남성</span>
-                        <span class="badge primary">자켓</span>
-                        <span class="badge secondary">긴팔</span>
-                        <span class="badge secondary">아우터</span>
+                        {% for category in product.categories %}
+                        <span class="badge primary">{{ category}}</span>
+                        {% endfor %}
                     </div>
                     
                     <div class="main-image">
-                        <img id="mainImage" src="https://images.unsplash.com/photo-1562572159-4efc207f5aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjBtb2RlbHxlbnwxfHx8fDE3NTk2NTAyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 메인 이미지">
+                        <img id="mainImage" src="../static{{ images[0].image_url }}{{ product_id }}/1.webp" alt="상품 메인 이미지">
                     </div>
                     <div class="thumbnail-grid">
                         <div class="thumbnail active" onclick="selectImage(0)">
-                            <img src="https://images.unsplash.com/photo-1562572159-4efc207f5aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjBtb2RlbHxlbnwxfHx8fDE3NTk2NTAyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 1">
+                            <img src="../static{{ images[0].image_url }}{{ product_id }}/1.webp" alt="상품 이미지 1">
                         </div>
                         <div class="thumbnail" onclick="selectImage(1)">
-                            <img src="https://images.unsplash.com/photo-1639270601211-9265bafae0f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHlsaXNoJTIwamFja2V0JTIwY2xvc2V1cHxlbnwxfHx8fDE3NTk2NzAzOTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 2">
+                            <img src="../static{{ images[1].image_url }}{{ product_id }}/2.webp" alt="상품 이미지 2">
                         </div>
                         <div class="thumbnail" onclick="selectImage(2)">
-                            <img src="https://images.unsplash.com/photo-1640336437301-8368b53861ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMGRldGFpbCUyMHRleHR1cmV8ZW58MXx8fHwxNzU5NjcwMzk4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 3">
+                            <img src="../static{{ images[2].image_url }}{{ product_id }}/3.webp" alt="상품 이미지 3">
                         </div>
                         <div class="thumbnail" onclick="selectImage(3)">
-                            <img src="https://images.unsplash.com/photo-1736956979752-d24513427817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbGlmZXN0eWxlJTIwd2VhcnxlbnwxfHx8fDE3NTk2NzAzOTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 이미지 4">
+                            <img src="../static{{ images[3].image_url }}{{ product_id }}/4.webp" alt="상품 이미지 4">
                         </div>
                     </div>
                 </div>
@@ -617,14 +70,9 @@
                     <div id="info" class="tab-content active">
                         <div class="product-info">
                             <!-- 상품 상세 이미지들 - 무신사 스타일로 간격 없이 쭉 이어지게 -->
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1510734790177-c931e3956547?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMHByb2R1Y3QlMjBkZXRhaWxzfGVufDF8fHx8MTc2MTY0ODk1Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 상세 이미지 1">
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1596832772762-78e213deff5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwamFja2V0JTIwZGV0YWlsfGVufDF8fHx8MTc2MTY0OTI0OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 상세 이미지 2">
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1707569590650-2f963183dc0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMGZhYnJpYyUyMHRleHR1cmV8ZW58MXx8fHwxNzYxNTgzMzU5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 상세 이미지 3">
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1630797160982-553facf1c3cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbW9kZWwlMjB3ZWFyaW5nJTIwamFja2V0fGVufDF8fHx8MTc2MTY0OTI1MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 상세 이미지 4">
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1612917209358-1451d63c4f13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMHByb2R1Y3QlMjBsaWZlc3R5bGV8ZW58MXx8fHwxNzYxNjQ5MjUxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 상세 이미지 5">
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1588343823210-663b8e34d258?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzaXplJTIwY2hhcnQlMjBndWlkZXxlbnwxfHx8fDE3NjE2NDg5NTd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="사이즈 가이드">
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1639270601211-9265bafae0f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aW50ZXIlMjBqYWNrZXQlMjBkZXRhaWx8ZW58MXx8fHwxNzYxNjQ5MjUxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="상품 상세 이미지 7">
-                            <img class="product-detail-image" src="https://images.unsplash.com/photo-1718128306989-a5bd41566cde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYWJyaWMlMjBjYXJlJTIwbGFiZWx8ZW58MXx8fHwxNzYxNjQ4OTU3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" alt="세탁 및 관리방법">
+                            {% for detail in detail_images %}
+                            <img class="product-detail-image" src="/static{{ detail.image_url }}{{ product.id }}/{{ loop.index }}.jpg" alt="상품 상세 이미지 {{ loop.index }}">
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -763,13 +211,13 @@
                 <div class="purchase-section">
                     <!-- 상품명 -->
                     <div style="margin-bottom: 16px;">
-                        <h2 style="font-size: 20px; font-weight: 600; margin: 0;">베이직 컴포트 코튼 자켓</h2>
+                        <h2 style="font-size: 20px; font-weight: 600; margin: 0;">{{ product.name }}</h2>
                     </div>
 
                     <!-- 가격 정보 -->
                     <div class="price-section">
                         <div class="price">
-                            <span>89,000원</span>
+                            <span>{{ product.price }}원</span>
                             <span class="discount-badge">31%</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
@@ -785,10 +233,9 @@
                         <label class="form-label">사이즈</label>
                         <select class="size-select" id="sizeSelect" onchange="selectSize()">
                             <option value="">사이즈를 선택하세요</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
+                            {% for size in product.sizes %}
+                             <option value="{{ size }}">{{ size }}</option>
+                            {% endfor %}
                         </select>
                     </div>
 
@@ -833,10 +280,9 @@
     <script>
         // 상품 이미지 배열
         const productImages = [
-            'https://images.unsplash.com/photo-1562572159-4efc207f5aff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwY2xvdGhpbmclMjBtb2RlbHxlbnwxfHx8fDE3NTk2NTAyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-            'https://images.unsplash.com/photo-1639270601211-9265bafae0f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHlsaXNoJTIwamFja2V0JTIwY2xvc2V1cHxlbnwxfHx8fDE3NTk2NzAzOTh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-            'https://images.unsplash.com/photo-1640336437301-8368b53861ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG90aGluZyUyMGRldGFpbCUyMHRleHR1cmV8ZW58MXx8fHwxNzU5NjcwMzk4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-            'https://images.unsplash.com/photo-1736956979752-d24513427817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwbGlmZXN0eWxlJTIwd2VhcnxlbnwxfHx8fDE3NTk2NzAzOTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+            {% for image in images %}
+                "/static{{ image.image_url }}{{ product.id }}/{{ loop.index }}.webp"{% if not loop.last %},{% endif %}
+            {% endfor %}
         ];
 
         // 상태 변수들

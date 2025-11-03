@@ -110,7 +110,13 @@
 
         /* 상품 정보 */
         .product-info {
-            space-y: 24px;
+            margin: 4px 0;
+        }
+
+        .product-detail-image {
+            width: 100%;
+            display: block;
+            margin: 1px 0;
         }
 
         .product-title {
@@ -121,11 +127,29 @@
 
         .badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 6px 12px;
             background-color: #f3f4f6;
             color: #374151;
             border-radius: 4px;
             font-size: 12px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .badge.primary {
+            background-color: #000;
+            color: white;
+        }
+
+        .badge.secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-bottom: 16px;
         }
 
@@ -303,63 +327,25 @@
             margin-bottom: 12px;
         }
 
-        .size-options {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-
-        .size-option {
-            padding: 8px 12px;
+        .size-select {
+            width: 100%;
+            padding: 10px 12px;
             border: 1px solid #d1d5db;
             border-radius: 6px;
             background: white;
+            font-size: 14px;
             cursor: pointer;
-            text-align: center;
             transition: all 0.2s;
         }
 
-        .size-option:hover {
+        .size-select:hover {
             border-color: #6b7280;
         }
 
-        .size-option.selected {
-            background-color: #000;
-            color: white;
+        .size-select:focus {
+            outline: none;
             border-color: #000;
-        }
-
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .quantity-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #d1d5db;
-            background: white;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quantity-btn:hover {
-            background-color: #f9fafb;
-        }
-
-        .quantity-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .quantity-display {
-            min-width: 48px;
-            text-align: center;
-            font-weight: 600;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
         }
 
         .total-price {

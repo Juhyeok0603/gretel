@@ -11,9 +11,6 @@ from fastapi.staticfiles import StaticFiles
 from backend.sign_up import router as sign_up_router
 from backend.login import router as login_router
 from backend.unlink import router as unlink_router
-from backend.products import router as products_router
-from backend.product_review import router as product_review_router
-from backend.product_size import router as product_size_router
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -41,7 +38,7 @@ async def home(request: Request):
 # 상품 상세 페이지
 @app.get("/products", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("products.html", {"request": request})
+    return templates.TemplateResponse("product_detail.html", {"request": request})
 
 # 마이페이지 라우트는 mypage.py에서
 from backend.mypage import get_user_name
@@ -55,26 +52,28 @@ async def mypage(request: Request):
     print(username)
     return templates.TemplateResponse("mypage.html", {"request": request, "username": username})
 
-from backend.products import products_info
+
+from backend.products import  products_info
+from backend.product_images import products_images
+from backend.product_detail_img import products_detail_img
 from backend.product_review import product_reviews
-from backend.product_size import product_sizes
 @app.get("/product/{product_id}", response_class=HTMLResponse)
 async def products(request: Request, product_id: int):
-    print(product_id)
-    result = products_info(product_id)
-    print("this is ",result)
-    print(result['images_url'][0])
+    product = products_info(product_id)
+    if not product:
+        return HTMLResponse(content="Product not found", status_code=404)
+    images = products_images(product_id)
+    if not images:
+        images = []
+    print("images:", images)
+    detail_images = products_detail_img(product_id)
+    if not detail_images:
+        detail_images = []
     review = product_reviews(product_id)
-    print("reviews:", review)
-    print("reviwer1:", review[0]['username'])
-    sizes = product_sizes(product_id)
-    print("sizes:", sizes)
-    return templates.TemplateResponse("product_detail.html", {"request": request, "product": result, "review": review, "sizes": sizes})
+    print("product:", product, "images:", images, "detail_images:", detail_images, "review:", review)
+    return templates.TemplateResponse("product_detail.html", {"request": request, "product_id": product_id, "product": product, "images": images, "detail_images": detail_images, "review": review})
 
 #라우터 등록
 app.include_router(sign_up_router)
 app.include_router(login_router)
 app.include_router(unlink_router)
-app.include_router(products_router)
-app.include_router(product_review_router)
-app.include_router(product_size_router)

@@ -6,6 +6,8 @@ from passlib.hash import bcrypt
 from fastapi.responses import HTMLResponse
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
+import json
+from decimal import Decimal
 
 
 router = APIRouter()
@@ -41,44 +43,23 @@ def products_info(product_id: int):
         with connection.cursor() as cursor:
             cursor.execute(f"SELECT * FROM {you_want} WHERE id= %s",(product_id)) # products
             result = cursor.fetchone()
+            if isinstance(result.get("price"), Decimal):
+                result["price"] = float(result["price"])
+
+    # categories 문자열 → 리스트
+            if isinstance(result.get("categories"), str):
+                try:
+                    result["categories"] = json.loads(result["categories"])
+                except json.JSONDecodeError:
+                    result["categories"] = []
+            if isinstance(result.get("sizes"), str):
+                try:
+                    result["sizes"] = json.loads(result["sizes"])
+                except json.JSONDecodeError:
+                    result["sizes"] = []
             print(type(result))
             print(result)
-            name = result['name']
-            description = result['description']
-            price = result['price']
-            category =result['category']
-            seller_id = result['seller_id']
-        with connection.cursor() as cursor:
-            you_want = "product_images"
-            sql = f"SELECT * FROM {you_want} WHERE product_id= %s ORDER BY sort_order" # product_images
-            cursor.execute(sql,(product_id))
-            images = cursor.fetchall()
-            if not images:
-                return {"message": "이미지 없음"}
-            images_url= [img["image_url"] for img in images]
-            print(images_url)
-        with connection.cursor() as cursor:
-            sql = f"SELECT * FROM product_details WHERE product_id = %s"
-            cursor.execute(sql,(product_id))
-            details=cursor.fetchone()
-            if not details:
-                return {"message":"세부사항 없음"}
-            print(details)
-            material=details['material']
-            origin=details['origin']
-            model_info=details['model_info']
-        return {
-            "name":name,
-            "description":description,
-            "price": price,
-            "category":category,
-            "seller_id":seller_id,
-            "material":material,
-            "origin":origin,
-            "model_info":model_info,
-            "images_url": images_url,
-
-            }
+            return result
     except Exception as e:
         print(f"Error: {e}")
         return HTMLResponse(f"Error: {e}")
