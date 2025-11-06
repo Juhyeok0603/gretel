@@ -156,6 +156,7 @@ async def kakao_login_redirect(request: Request, code: str):
                     cursor.execute("INSERT INTO users (username, kakao_id, access_token) VALUES (%s, %s, %s)", (username, kakao_id, access_token))
                     user_id = cursor.lastrowid
                     print(user_id)
+                    print("username:", username)
                     request.session["user_id"] = user_id
                     request.session["user"] = username
                     connection.commit()
@@ -166,6 +167,8 @@ async def kakao_login_redirect(request: Request, code: str):
             else:
                 user_id = result['id']
                 request.session["user_id"] = user_id
+                print("username:", username)
+                print("user_id:", user_id)
                 print(f"{username}이 카카오로 로그인")
                 request.session["user"] = username
             return RedirectResponse("/")

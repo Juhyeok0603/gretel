@@ -10,19 +10,20 @@
     <!-- 네비게이션 -->
     <nav>
         <div class="nav-container">
-            <a href="/" class="logo">Fashion Store</a>
+            <a href="/" class="logo">Gretel</a>
             
             <div class="nav-links">
-                <a href="/" class="active">Home</a>
-                <a href="/search">검색</a>
-                <a href="/cart">장바구니</a>
-                <a href="/mypage">My Page</a>
-            </div>
 
-            <div class="user-section">
-                <span id="userSection">
-                    <!-- JavaScript로 동적으로 로그인/로그아웃 버튼이 여기에 삽입됩니다 -->
-                </span>
+                <nav>
+        <a href="../category" class="icon-btn">카테고리</a>
+        <a href="../cart" class="icon-btn">장바구니</a>
+        <a href="../mypage" class="icon-btn">마이페이지</a>
+        {% if request.session.get("user_id") %}
+        <a href="../logout" class="icon-btn">로그아웃</a>
+        {% else %}
+        <a href="../login" class="icon-btn">로그인/회원가입</a>
+        {% endif %}
+      </nav>
             </div>
         </div>
     </nav>
@@ -239,6 +240,11 @@
                         </select>
                     </div>
 
+                    <!-- 수량 선택 -->
+                    <div class="form-group">
+                        <label class="form-label">수량</label>
+                        <input type="number" id="quantityInput" value="1" min="1" style="width: 60px;" onchange="updateQuantity()">
+                    </div>
                     <div class="separator"></div>
 
                     <!-- 구매 버튼들 -->
@@ -311,31 +317,6 @@
             }
         }
 
-        // 로그인 함수
-        function showLogin() {
-            const username = prompt('사용자 이름을 입력하세요:');
-            if (username && username.trim()) {
-                isLoggedIn = true;
-                currentUser = username.trim();
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('currentUser', currentUser);
-                updateUserSection();
-                alert(`${currentUser}님, 로그인되었습니다!`);
-            }
-        }
-
-        // 로그아웃 함수
-        function logout() {
-            if (confirm('로그아웃 하시겠습니까?')) {
-                isLoggedIn = false;
-                currentUser = '';
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('currentUser');
-                updateUserSection();
-                alert('로그아웃되었습니다.');
-            }
-        }
-
         // 이미지 선택 함수
         function selectImage(index) {
             selectedImageIndex = index;
@@ -373,6 +354,14 @@
             
             // 구매 버튼 활성화
             updateButtonStates();
+        }
+
+        let selectedQuantity = 1;
+
+        // 수량 입력 변경 시
+        function updateQuantity() {
+            const qtyInput = document.getElementById('quantityInput');
+            selectedQuantity = parseInt(qtyInput.value) || 1;
         }
 
         // 버튼 상태 업데이트
@@ -433,19 +422,69 @@
             }
         }
 
+        selectedPrice = {{ product.price }} * selectedQuantity;
         // 구매하기 버튼 클릭 이벤트
         document.getElementById('buyBtn').addEventListener('click', function() {
             if (selectedSize) {
-                alert(`바로구매: ${selectedSize} 사이즈 - ${basePrice.toLocaleString()}원`);
+                fetch('/payment/ready',{
+                     method: 'POST',
+                      headers:{
+                            'Content-Type':'application/json'
+                      },
+                      body:JSON.stringify({
+                            user_id: '{{ user_id }}',
+                            user: '{{ user }}',
+                            product_id: '{{ product.id }}',
+                            size: selectedSize,
+                            quantity: selectedQuantity,
+                            price: selectedPrice
+                })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.checkout_url) {
+                        window.location.href = data.checkout_url;
+                        
+
+                    } else {
+                        alert(data.message);
+                        console.error('결제 준비 실패:', data);
+                    }
+                })
+
             }
         });
+        
 
         // 장바구니 버튼 클릭 이벤트
         document.getElementById('cartBtn').addEventListener('click', function() {
-            if (selectedSize) {
-                alert(`장바구니에 추가: ${selectedSize} 사이즈`);
+            if (selectedSize) { 
+                // 장바구니에 상품 추가 로직
+                fetch('/cart/add',{
+                   method: 'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({
+                        user_id: '{{ user_id }}',
+                        user: '{{ user }}',
+                        product_id: '{{ product.id }}',
+                        size: selectedSize,
+                        quantity: selectedQuantity,
+                        price: selectedPrice
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success){
+                        alert(data.message);
+                    }else{
+                        alert(data.message);
+                    }
+                });
             }
         });
+
 
         // 초기화
         updateButtonStates();

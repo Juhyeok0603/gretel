@@ -11,6 +11,8 @@ from fastapi.staticfiles import StaticFiles
 from backend.sign_up import router as sign_up_router
 from backend.login import router as login_router
 from backend.unlink import router as unlink_router
+from backend.cart import router as cart_router
+from backend.pay import router as pay_router
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -26,6 +28,9 @@ app.add_middleware(SessionMiddleware, secret_key=secret)
 # html 페이지 라우트
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
+    user= request.session.get("user")
+    user_id = request.session.get("user_id")
+    print("user_id:", user_id, "user:", user)
     return templates.TemplateResponse("index.html", {"request": request})
 @app.get("/sign_up", response_class=HTMLResponse)
 async def home(request: Request):
@@ -33,7 +38,15 @@ async def home(request: Request):
 @app.get("/login", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
-
+@app.get("/payment/success", response_class=HTMLResponse)
+async def payment_success(request: Request):
+    return templates.TemplateResponse("payment/success.html", {"request": request})
+@app.get("/payment/fail", response_class=HTMLResponse)
+async def payment_fail(request: Request):
+    return templates.TemplateResponse("payment/fail.html", {"request": request})
+@app.get("/payment/cancel", response_class=HTMLResponse)
+async def payment_cancel(request: Request):
+    return templates.TemplateResponse("payment/cancel.html", {"request": request})
 
 # 상품 상세 페이지
 @app.get("/products", response_class=HTMLResponse)
@@ -70,10 +83,14 @@ async def products(request: Request, product_id: int):
     if not detail_images:
         detail_images = []
     review = product_reviews(product_id)
+    user = request.session.get("user")
+    user_id = request.session.get("user_id")
     print("product:", product, "images:", images, "detail_images:", detail_images, "review:", review)
-    return templates.TemplateResponse("product_detail.html", {"request": request, "product_id": product_id, "product": product, "images": images, "detail_images": detail_images, "review": review})
+    return templates.TemplateResponse("product_detail.html", {"request": request, "product_id": product_id, "product": product, "images": images, "detail_images": detail_images, "review": review, "user": user, "user_id": user_id})
 
 #라우터 등록
 app.include_router(sign_up_router)
 app.include_router(login_router)
 app.include_router(unlink_router)
+app.include_router(cart_router)
+app.include_router(pay_router)
