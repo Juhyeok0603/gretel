@@ -84,7 +84,7 @@ async def login(
             if bcrypt.verify(password, hashed_password):
                 request.session['user']=username
                 request.session['user_id']=user_id
-                return templates.TemplateResponse("index.html", {"request": request, "message": "로그인 성공", "username": username})
+                return RedirectResponse(url="/", status_code=303)
             else:
                 return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = './login';</script>")
     except Exception as e:

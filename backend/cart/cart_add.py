@@ -29,6 +29,7 @@ def get_db_con():
         autocommit=False
     )
 
+# cart_add
 @router.post("/cart/add")
 async def add_cart(request:Request):
     data = await request.json()
@@ -37,6 +38,7 @@ async def add_cart(request:Request):
     user_id = data.get("user_id")
     size = data.get("size")
     price = data.get("price")
+    price = price * quantity
     print(f"Adding to cart: user_id={user_id}, product_id={product_id}, quantity={quantity}, size={size}, price={price}")
     if not user_id:
         return HTMLResponse("로그인이 필요합니다.", status_code=401)
@@ -61,3 +63,4 @@ async def add_cart(request:Request):
         return HTMLResponse(content=json.dumps({"success": False, "message": "장바구니 추가에 실패했습니다."}), status_code=500)
     finally:
         connection.close()
+

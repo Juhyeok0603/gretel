@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>판매자 등록 - GRETEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+     <!-- Custom Styles -->
+  <link rel="stylesheet" href="../static/css/seller/seller_regist.css">
+</head>
+<body class="min-h-screen bg-neutral-50">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Header -->
+    <header class="bg-white border-b border-neutral-200">
+        <a href="/">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h1 class="text-black">GreTel</h1>
+        </div>
+        </a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="mb-8">
+            <h2 class="text-black mb-2">판매자 등록</h2>
+            <p class="text-neutral-600">
+                브랜드 및 사업자 정보를 입력하시면 검토 후 승인 절차가 진행됩니다.
+            </p>
+        </div>
+
+        <form id="registrationForm" class="space-y-8">
+            <!-- 브랜드 기본 정보 -->
+            <div class="card p-6">
+                <h3 class="text-black mb-6">브랜드 기본 정보</h3>
+                
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="brandName" class="block">
+                                브랜드명 <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="brandName"
+                                name="brandName"
+                                class="input"
+                                placeholder="예: 멋쟁이사자처럼"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <!--데이터 안 넣을 거임-->
+                        <label for="brandDescription" class="block">브랜드 소개<span class="text-red-500">*</span></label>
+                        <textarea
+                            id="brandDescription"
+                            name="brandDescription"
+                            class="input"
+                            placeholder="브랜드의 컨셉과 특징을 간단히 소개해주세요."
+                            rows="4"
+                            required
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 사업자 정보 -->
+            <div class="card p-6">
+                <h3 class="text-black mb-6">사업자 정보</h3>
+                
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="businessNumber" class="block">
+                                사업자등록번호 <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="businessNumber"
+                                name="businessNumber"
+                                class="input"
+                                placeholder="000-00-00000"
+                                required
+                            />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="representativeName" class="block">
+                                대표자명 <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="representativeName"
+                                name="representativeName"
+                                class="input"
+                                placeholder="홍길동"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="address" class="block">
+                            사업장 주소 <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex gap-2 mb-2">
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                class="input"
+                                placeholder="주소를 입력해주세요"
+                                required
+                            />
+                            <button type="button" class="btn btn-outline shrink-0">
+                                주소 검색
+                            </button>
+                        </div>
+                        <input
+                            type="text"
+                            id="addressDetail"
+                            name="addressDetail"
+                            class="input"
+                            placeholder="상세 주소"
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="phone" class="block">
+                                대표 전화번호 <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                class="input"
+                                placeholder="010-0000-0000"
+                                required
+                            />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="email" class="block">
+                                이메일 <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="input"
+                                placeholder="example@email.com"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 정산 계좌 정보 -->
+            <div class="card p-6">
+                <h3 class="text-black mb-6">정산 계좌 정보</h3>
+                
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="bankName" class="block">
+                                은행명 <span class="text-red-500">*</span>
+                            </label>
+                            <select id="bankName" name="bankName" class="select" required>
+                                <option value="">은행을 선택하세요</option>
+                                <option value="kb">국민은행</option>
+                                <option value="shinhan">신한은행</option>
+                                <option value="woori">우리은행</option>
+                                <option value="hana">하나은행</option>
+                                <option value="nh">농협은행</option>
+                                <option value="ibk">기업은행</option>
+                                <option value="kakao">카카오뱅크</option>
+                                <option value="toss">토스뱅크</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="accountNumber" class="block">
+                                계좌번호 <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="accountNumber"
+                                name="accountNumber"
+                                class="input"
+                                placeholder="- 없이 입력"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="accountHolder" class="block">
+                            예금주 <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="accountHolder"
+                            name="accountHolder"
+                            class="input"
+                            placeholder="예금주명 (사업자명 또는 대표자명)"
+                            required
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- 서류 첨부 -->
+            <div class="card p-6">
+                <h3 class="text-black mb-6">서류 첨부</h3>
+                
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block">
+                            사업자등록증 
+                        </label>
+                        <div class="file-upload" id="businessLicenseUpload">
+                            <input
+                                type="file"
+                                id="businessLicense"
+                                name="businessLicense"
+                                class="hidden"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                            />
+                            <label for="businessLicense" class="cursor-pointer block">
+                                <div id="businessLicenseContent">
+                                    <svg class="w-8 h-8 text-neutral-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="text-neutral-600 mb-1">파일을 선택하거나 드래그하세요</p>
+                                    <p class="text-neutral-400 text-sm">PDF, JPG, PNG (최대 10MB)</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block">
+                            통장 사본
+                        </label>
+                        <div class="file-upload" id="bankbookUpload">
+                            <input
+                                type="file"
+                                id="bankbook"
+                                name="bankbook"
+                                class="hidden"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                            />
+                            <label for="bankbook" class="cursor-pointer block">
+                                <div id="bankbookContent">
+                                    <svg class="w-8 h-8 text-neutral-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="text-neutral-600 mb-1">파일을 선택하거나 드래그하세요</p>
+                                    <p class="text-neutral-400 text-sm">PDF, JPG, PNG (최대 10MB)</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 약관 동의 -->
+            <div class="card p-6">
+                <h3 class="text-black mb-6">약관 동의</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            name="terms"
+                            class="checkbox mt-1"
+                            required
+                        />
+                        <div class="flex-1">
+                            <label for="terms" class="cursor-pointer">
+                                <span class="text-red-500">*</span> 판매자 이용약관에 동의합니다
+                            </label>
+                            <a href="#" class="text-neutral-500 underline ml-2 text-sm" target="_blank">전문보기</a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <input
+                            type="checkbox"
+                            id="privacy"
+                            name="privacy"
+                            class="checkbox mt-1"
+                            required
+                        />
+                        <div class="flex-1">
+                            <label for="privacy" class="cursor-pointer">
+                                <span class="text-red-500">*</span> 개인정보 수집 및 이용에 동의합니다
+                            </label>
+                            <a href="#" class="text-neutral-500 underline ml-2 text-sm" target="_blank">전문보기</a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <input
+                            type="checkbox"
+                            id="commission"
+                            name="commission"
+                            class="checkbox mt-1"
+                            required
+                        />
+                        <div class="flex-1">
+                            <label for="commission" class="cursor-pointer">
+                                <span class="text-red-500">*</span> 판매 수수료 정책에 동의합니다
+                            </label>
+                            <a href="#" class="text-neutral-500 underline ml-2 text-sm" target="_blank">전문보기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <div class="flex justify-center gap-4">
+                <button onclick="location.href='/seller/sellers'" type="button" class="btn btn-outline px-12">취소</button>
+                <button type="submit" class="btn btn-primary px-12">판매자 등록 신청</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Toast 알림 함수
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // 파일 업로드 처리
+        function handleFileUpload(inputId, uploadDivId, contentDivId) {
+            const input = document.getElementById(inputId);
+            const uploadDiv = document.getElementById(uploadDivId);
+            const contentDiv = document.getElementById(contentDivId);
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    uploadDiv.classList.add('has-file');
+                    contentDiv.innerHTML = `
+                        <div class="flex items-center justify-center gap-2 text-green-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>${file.name}</span>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // 파일 업로드 이벤트 설정
+        handleFileUpload('businessLicense', 'businessLicenseUpload', 'businessLicenseContent');
+        handleFileUpload('bankbook', 'bankbookUpload', 'bankbookContent');
+
+        // 폼 제출 처리
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 약관 동의 확인
+            const terms = document.getElementById('terms').checked;
+            const privacy = document.getElementById('privacy').checked;
+            const commission = document.getElementById('commission').checked;
+            
+            if (!terms || !privacy || !commission) {
+                showToast('모든 필수 약관에 동의해주세요.', 'error');
+                return;
+            }
+            
+            // 파일 업로드 확인
+            const businessLicense = document.getElementById('businessLicense').files[0];
+            const bankbook = document.getElementById('bankbook').files[0];
+            
+            const brandName=document.getElementById('brandName').value
+            const businessNumber=document.getElementById('businessNumber').value
+            const representativeName=document.getElementById('representativeName').value
+            const address = document.getElementById('address').value
+            const addressDetail=document.getElementById('addressDetail').value
+            const phone=document.getElementById('phone').value
+            const email=document.getElementById('email').value
+            const bankName=document.getElementById('bankName').value
+            const accountNumber=document.getElementById('accountNumber').value
+            const accountHolder=document.getElementById('accountHolder').value
+
+
+            
+            // 폼 데이터 수집
+            // const formData = new FormData(this);
+            // console.log(fromData)
+
+            fetch('/seller/seller_regist',{
+                method: 'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    brandName: brandName,
+                    businessNumber: businessNumber,
+                    representativeName:representativeName,
+                    address:address,
+                    addressDetail:addressDetail,
+                    phone:phone,
+                    email:email,
+                    bankName:bankName,
+                    accountNumber:accountNumber,
+                    accountHolder:accountHolder,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data){
+                    alert(data.message)
+                    location.href="/"
+                }else{
+                    showToast(data.message)
+                    this.reset()
+                }
+            })
+
+            // // 성공 메시지
+            // showToast('판매자 등록이 완료되었습니다. 검토 후 승인 결과를 알려드리겠습니다.', 'success');
+            
+            // 폼 초기화 (선택사항)
+            // this.reset();
+            
+            console.log('제출된 데이터:', Object.fromEntries(formData));
+        });
+    </script>
+</body>
+</html>

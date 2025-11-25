@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 등록 - 쇼핑몰</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../static/css/seller/product_regist.css"
+</head>
+<body class="bg-neutral-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-neutral-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
+            <button class="hover:bg-neutral-100 p-2 rounded-lg transition-colors" onclick="history.back()">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="text-xl font-semibold text-neutral-900">상품 등록</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <form id="productForm" class="space-y-8">
+            <!-- Product Images Section -->
+            <div class="bg-white p-6 rounded-lg border border-neutral-200 shadow-sm">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-base font-medium text-neutral-900">
+                            상품 이미지 <span class="text-red-500">*</span>
+                        </label>
+                        <p class="text-sm text-neutral-500 mt-1">최소 4장, 최대 10장까지 등록 가능합니다.</p>
+                    </div>
+                    
+                    <input type="file" id="productImageInput" accept="image/*" multiple>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4" id="productImagesGrid">
+                        <!-- Upload Button -->
+                        <button type="button" onclick="document.getElementById('productImageInput').click()" 
+                                class="aspect-square border-2 border-dashed border-neutral-300 rounded-lg hover:border-neutral-400 hover:bg-neutral-50 transition-colors flex flex-col items-center justify-center gap-2 text-neutral-500">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            <span class="text-sm" id="productImageCount">0/10</span>
+                        </button>
+                    </div>
+                    
+                    <p class="text-sm text-red-500" id="productImageError" style="display: none;"></p>
+                </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="bg-white p-6 rounded-lg border border-neutral-200 shadow-sm">
+                <h2 class="text-lg font-semibold text-neutral-900 mb-6">기본 정보</h2>
+                <div class="space-y-6">
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div class="space-y-2">
+                            <label for="productName" class="text-sm font-medium text-neutral-700">
+                                상품명 <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="productName" required 
+                                   class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                                   placeholder="상품명을 입력하세요">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="brand" class="text-sm font-medium text-neutral-700">
+                                브랜드 <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="brand" required 
+                                   class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                                   placeholder="브랜드명을 입력하세요">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="category" class="text-sm font-medium text-neutral-700">
+                            카테고리 <span class="text-red-500">*</span>
+                        </label>
+                        <select id="category" required 
+                                class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent">
+                            <option value="">카테고리를 선택하세요</option>
+                            <option value="outer">아우터</option>
+                            <option value="top">상의</option>
+                            <option value="bottom">하의</option>
+                            <option value="shoes">신발</option>
+                            <option value="acc">액세서리</option>
+                            <option value="bag">가방</option>
+                        </select>
+                    </div>
+
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div class="space-y-2">
+                            <label for="price" class="text-sm font-medium text-neutral-700">
+                                판매가 <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" id="price" required 
+                                   class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                                   placeholder="0">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="discountPrice" class="text-sm font-medium text-neutral-700">할인가</label>
+                            <input type="number" id="discountPrice" 
+                                   class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                                   placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-neutral-700">사이즈</label>
+                        <div class="flex flex-wrap gap-2" id="sizeButtons">
+                            <button type="button" class="size-btn" data-size="XS">XS</button>
+                            <button type="button" class="size-btn" data-size="S">S</button>
+                            <button type="button" class="size-btn" data-size="M">M</button>
+                            <button type="button" class="size-btn" data-size="L">L</button>
+                            <button type="button" class="size-btn" data-size="XL">XL</button>
+                            <button type="button" class="size-btn" data-size="XXL">XXL</button>
+                            <button type="button" class="size-btn" data-size="FREE">FREE</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-neutral-700">색상</label>
+                        <div class="flex flex-wrap gap-2" id="colorButtons">
+                            <button type="button" class="color-btn" data-color="블랙">
+                                <span class="color-preview" style="background-color: #000;"></span>블랙
+                            </button>
+                            <button type="button" class="color-btn" data-color="화이트">
+                                <span class="color-preview" style="background-color: #fff; border: 1px solid #d4d4d4;"></span>화이트
+                            </button>
+                            <button type="button" class="color-btn" data-color="그레이">
+                                <span class="color-preview" style="background-color: #9ca3af;"></span>그레이
+                            </button>
+                            <button type="button" class="color-btn" data-color="베이지">
+                                <span class="color-preview" style="background-color: #fef3c7;"></span>베이지
+                            </button>
+                            <button type="button" class="color-btn" data-color="브라운">
+                                <span class="color-preview" style="background-color: #b45309;"></span>브라운
+                            </button>
+                            <button type="button" class="color-btn" data-color="네이비">
+                                <span class="color-preview" style="background-color: #1e3a8a;"></span>네이비
+                            </button>
+                            <button type="button" class="color-btn" data-color="카키">
+                                <span class="color-preview" style="background-color: #15803d;"></span>카키
+                            </button>
+                            <button type="button" class="color-btn" data-color="레드">
+                                <span class="color-preview" style="background-color: #dc2626;"></span>레드
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div class="space-y-2">
+                            <label for="stock" class="text-sm font-medium text-neutral-700">재고 수량</label>
+                            <input type="number" id="stock" 
+                                   class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                                   placeholder="0">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="deliveryFee" class="text-sm font-medium text-neutral-700">배송비</label>
+                            <input type="number" id="deliveryFee" 
+                                   class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                                   placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="description" class="text-sm font-medium text-neutral-700">상품 설명</label>
+                        <textarea id="description" rows="4" 
+                                  class="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+                                  placeholder="상품에 대한 설명을 입력하세요"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detail Images Section -->
+            <div class="bg-white p-6 rounded-lg border border-neutral-200 shadow-sm">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-base font-medium text-neutral-900">상세 이미지</label>
+                        <p class="text-sm text-neutral-500 mt-1">상품 상세 설명을 위한 이미지를 등록하세요.</p>
+                    </div>
+                    
+                    <input type="file" id="detailImageInput" accept="image/*" multiple>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="detailImagesGrid">
+                        <!-- Upload Button -->
+                        <button type="button" onclick="document.getElementById('detailImageInput').click()" 
+                                class="aspect-[3/4] border-2 border-dashed border-neutral-300 rounded-lg hover:border-neutral-400 hover:bg-neutral-50 transition-colors flex flex-col items-center justify-center gap-2 text-neutral-500">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            <span class="text-sm">이미지 추가</span>
+                            <span class="text-xs text-neutral-400" id="detailImageCount" style="display: none;">0장</span>
+                        </button>
+                    </div>
+                    
+                    <p class="text-sm text-neutral-500" id="detailImageHint" style="display: none;">
+                        💡 이미지 위에 마우스를 올려 순서를 변경하거나 삭제할 수 있습니다
+                    </p>
+                </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="flex gap-3 justify-end">
+                <button type="button" class="btn-secondary" onclick="resetForm()">취소</button>
+                <button type="submit" class="btn-primary">상품 등록</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // State
+        let productImages = [];
+        let detailImages = [];
+        let selectedSizes = [];
+        let selectedColors = [];
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Product Images
+        document.getElementById('productImageInput').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                if (productImages.length >= 10) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    productImages.push(e.target.result);
+                    renderProductImages();
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            e.target.value = '';
+        });
+
+        function renderProductImages() {
+            const grid = document.getElementById('productImagesGrid');
+            const uploadBtn = grid.querySelector('button');
+            const countSpan = document.getElementById('productImageCount');
+            const errorText = document.getElementById('productImageError');
+            
+            // Clear existing images
+            grid.innerHTML = '';
+            
+            // Re-add upload button if under max
+            if (productImages.length < 10) {
+                grid.appendChild(uploadBtn);
+            }
+            
+            // Update count
+            countSpan.textContent = `${productImages.length}/10`;
+            
+            // Add image previews
+            productImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'relative aspect-square border border-neutral-200 rounded-lg overflow-hidden group image-upload-preview';
+                
+                div.innerHTML = `
+                    <img src="${img}" alt="상품 이미지 ${index + 1}" class="w-full h-full object-cover">
+                    ${index === 0 ? '<div class="absolute top-2 left-2 bg-neutral-900 text-white px-2 py-1 rounded text-xs">대표</div>' : ''}
+                    <button type="button" onclick="removeProductImage(${index})" 
+                            class="hover-controls absolute top-2 right-2 bg-black bg-opacity-60 text-white p-1.5 rounded-full hover:bg-opacity-80">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-xs">
+                        ${index + 1}
+                    </div>
+                `;
+                
+                grid.appendChild(div);
+            });
+            
+            // Show/hide error
+            if (productImages.length < 4) {
+                errorText.textContent = `최소 4장의 이미지를 등록해주세요. (현재 ${productImages.length}장)`;
+                errorText.style.display = 'block';
+            } else {
+                errorText.style.display = 'none';
+            }
+        }
+
+        function removeProductImage(index) {
+            productImages.splice(index, 1);
+            renderProductImages();
+        }
+
+        // Detail Images
+        document.getElementById('detailImageInput').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    detailImages.push(e.target.result);
+                    renderDetailImages();
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            e.target.value = '';
+        });
+
+        function renderDetailImages() {
+            const grid = document.getElementById('detailImagesGrid');
+            const uploadBtn = grid.querySelector('button');
+            const countSpan = document.getElementById('detailImageCount');
+            const hint = document.getElementById('detailImageHint');
+            
+            // Clear existing images
+            grid.innerHTML = '';
+            
+            // Re-add upload button
+            grid.appendChild(uploadBtn);
+            
+            // Update count
+            if (detailImages.length > 0) {
+                countSpan.textContent = `${detailImages.length}장`;
+                countSpan.style.display = 'block';
+                hint.style.display = 'block';
+            } else {
+                countSpan.style.display = 'none';
+                hint.style.display = 'none';
+            }
+            
+            // Add image previews
+            detailImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'relative aspect-[3/4] border border-neutral-200 rounded-lg overflow-hidden group image-upload-preview';
+                
+                div.innerHTML = `
+                    <img src="${img}" alt="상세 이미지 ${index + 1}" class="w-full h-full object-cover">
+                    <div class="absolute top-2 left-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-xs">
+                        ${index + 1}
+                    </div>
+                    <button type="button" onclick="removeDetailImage(${index})" 
+                            class="hover-controls absolute top-2 right-2 bg-black bg-opacity-60 text-white p-1.5 rounded-full hover:bg-opacity-80">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                    <div class="hover-controls absolute bottom-2 right-2 flex gap-1">
+                        <button type="button" onclick="moveDetailImage(${index}, ${index - 1})" 
+                                ${index === 0 ? 'disabled' : ''}
+                                class="bg-black bg-opacity-60 text-white p-1.5 rounded hover:bg-opacity-80 disabled:opacity-30 disabled:cursor-not-allowed"
+                                title="왼쪽으로 이동">
+                            <span class="text-xs">←</span>
+                        </button>
+                        <button type="button" onclick="moveDetailImage(${index}, ${index + 1})" 
+                                ${index === detailImages.length - 1 ? 'disabled' : ''}
+                                class="bg-black bg-opacity-60 text-white p-1.5 rounded hover:bg-opacity-80 disabled:opacity-30 disabled:cursor-not-allowed"
+                                title="오른쪽으로 이동">
+                            <span class="text-xs">→</span>
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(div);
+            });
+        }
+
+        function removeDetailImage(index) {
+            detailImages.splice(index, 1);
+            renderDetailImages();
+        }
+
+        function moveDetailImage(fromIndex, toIndex) {
+            if (toIndex < 0 || toIndex >= detailImages.length) return;
+            
+            const [movedImage] = detailImages.splice(fromIndex, 1);
+            detailImages.splice(toIndex, 0, movedImage);
+            renderDetailImages();
+        }
+
+        // Size buttons
+        document.getElementById('sizeButtons').addEventListener('click', function(e) {
+            if (e.target.classList.contains('size-btn')) {
+                e.preventDefault();
+                const size = e.target.dataset.size;
+                
+                if (selectedSizes.includes(size)) {
+                    selectedSizes = selectedSizes.filter(s => s !== size);
+                    e.target.classList.remove('active');
+                } else {
+                    selectedSizes.push(size);
+                    e.target.classList.add('active');
+                }
+            }
+        });
+
+        // Color buttons
+        document.getElementById('colorButtons').addEventListener('click', function(e) {
+            const btn = e.target.closest('.color-btn');
+            if (btn) {
+                e.preventDefault();
+                const color = btn.dataset.color;
+                
+                if (selectedColors.includes(color)) {
+                    selectedColors = selectedColors.filter(c => c !== color);
+                    btn.classList.remove('active');
+                } else {
+                    selectedColors.push(color);
+                    btn.classList.add('active');
+                }
+            }
+        });
+
+        // Form submission
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (productImages.length < 4) {
+                showToast('상품 이미지를 최소 4장 등록해주세요.', 'error');
+                return;
+            }
+            
+            const formData = {
+                productName: document.getElementById('productName').value,
+                brand: document.getElementById('brand').value,
+                category: document.getElementById('category').value,
+                price: document.getElementById('price').value,
+                discountPrice: document.getElementById('discountPrice').value,
+                sizes: selectedSizes,
+                colors: selectedColors,
+                stock: document.getElementById('stock').value,
+                deliveryFee: document.getElementById('deliveryFee').value,
+                description: document.getElementById('description').value,
+                productImages: productImages,
+                detailImages: detailImages
+            };
+            
+            console.log('상품 정보:', formData);
+            showToast('상품이 성공적으로 등록되었습니다!');
+            
+            // Optionally reset form
+            // resetForm();
+        });
+
+        // Reset form
+        function resetForm() {
+            if (confirm('작성 중인 내용이 삭제됩니다. 계속하시겠습니까?')) {
+                document.getElementById('productForm').reset();
+                productImages = [];
+                detailImages = [];
+                selectedSizes = [];
+                selectedColors = [];
+                
+                document.querySelectorAll('.size-btn, .color-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                renderProductImages();
+                renderDetailImages();
+            }
+        }
+
+        // Initialize
+        renderProductImages();
+        renderDetailImages();
+    </script>
+</body>
+</html>

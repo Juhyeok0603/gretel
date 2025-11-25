@@ -2,13 +2,14 @@ from fastapi import APIRouter, Form
 import pymysql
 from dotenv import load_dotenv
 import os
-from passlib.hash import bcrypt
 from fastapi.responses import HTMLResponse
 from fastapi import Request
+import json
 from fastapi.templating import Jinja2Templates
 
 
 router = APIRouter()
+templates = Jinja2Templates(directory="templates")
 load_dotenv() # .env 파일 로드
 
 
@@ -30,19 +31,6 @@ def get_db_con():
         autocommit=False
     )
 
-def products_images(product_id: int):
-    try:
-        base_path = f"./static/images/products/{product_id}"
-        images = []
-        for i in range(1,5):
-            for ext in ['webp','jpg','jpeg','png']:
-                path = os.path.join(base_path,f"{i}.{ext}")
-                if os.path.exists(path):
-                    images.append({'product_id':product_id,'image_url':f"/images/products/{product_id}/{i}.{ext}"})
-                    break
-                else:
-                    images.append({'product_id':product_id, 'image_url':f"/images/products/default.png"})
-        return images
-    except Exception as e:
-        print(f"Error: {e}")
-        return HTMLResponse(f"Error: {e}")
+@router.get("/cart", response_class=HTMLResponse)
+async def cart(request: Request):
+    return templates.TemplateResponse("cart.html",{"request":request})

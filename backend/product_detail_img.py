@@ -32,14 +32,24 @@ def get_db_con():
 
 def products_detail_img(product_id: int):
     try:
-        sql = "SELECT * FROM product_detail_img WHERE product_id= %s"
-        connection = get_db_con()
-        with connection.cursor() as cursor:
-            cursor.execute(sql, (product_id,))
-            result = cursor.fetchall()
-            print(type(result))
-            print(result)
-            return result
+        base_path = f"./static/images/product_detail/{product_id}"
+        detail_img = []
+        i = 1
+        while True:
+            found = False  # i번째 이미지가 존재하는지 체크
+            for ext in ['webp', 'jpg', 'jpeg', 'png']:
+                path = os.path.join(base_path, f"{i}.{ext}")
+                if os.path.exists(path):
+                    detail_img.append({
+                        'product_id': product_id,
+                        'image_url': f"/images/product_detail/{product_id}/{i}.{ext}"
+                    })
+                    found = True  # 최소 하나 발견
+            if not found:
+                break  # i번째 번호에 이미지가 하나도 없으면 종료
+            i += 1
+
+        return detail_img
     except Exception as e:
         print(f"Error: {e}")
         return HTMLResponse(f"Error: {e}")

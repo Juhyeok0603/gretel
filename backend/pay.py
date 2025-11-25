@@ -34,7 +34,7 @@ def get_db_con():
         autocommit=False
     )
 
-
+# 바로구매 로직
 @router.post("/payment/ready", response_class=JSONResponse)
 async def payment_ready(request: Request):
     data = await request.json()

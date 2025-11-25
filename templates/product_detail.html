@@ -42,20 +42,20 @@
                     </div>
                     
                     <div class="main-image">
-                        <img id="mainImage" src="../static{{ images[0].image_url }}{{ product_id }}/1.webp" alt="상품 메인 이미지">
+                        <img id="mainImage" src="../static{{ images[0].image_url }}" alt="상품 메인 이미지">
                     </div>
                     <div class="thumbnail-grid">
                         <div class="thumbnail active" onclick="selectImage(0)">
-                            <img src="../static{{ images[0].image_url }}{{ product_id }}/1.webp" alt="상품 이미지 1">
+                            <img src="../static{{ images[0].image_url }}" alt="상품 이미지 1">
                         </div>
                         <div class="thumbnail" onclick="selectImage(1)">
-                            <img src="../static{{ images[1].image_url }}{{ product_id }}/2.webp" alt="상품 이미지 2">
+                            <img src="../static{{ images[1].image_url }}" alt="상품 이미지 2">
                         </div>
                         <div class="thumbnail" onclick="selectImage(2)">
-                            <img src="../static{{ images[2].image_url }}{{ product_id }}/3.webp" alt="상품 이미지 3">
+                            <img src="../static{{ images[2].image_url }}" alt="상품 이미지 3">
                         </div>
                         <div class="thumbnail" onclick="selectImage(3)">
-                            <img src="../static{{ images[3].image_url }}{{ product_id }}/4.webp" alt="상품 이미지 4">
+                            <img src="../static{{ images[3].image_url }}    " alt="상품 이미지 4">
                         </div>
                     </div>
                 </div>
@@ -72,138 +72,82 @@
                         <div class="product-info">
                             <!-- 상품 상세 이미지들 - 무신사 스타일로 간격 없이 쭉 이어지게 -->
                             {% for detail in detail_images %}
-                            <img class="product-detail-image" src="/static{{ detail.image_url }}{{ product.id }}/{{ loop.index }}.jpg" alt="상품 상세 이미지 {{ loop.index }}">
+                            <img class="product-detail-image" src="/static{{ detail.image_url }}" alt="상품 상세 이미지 {{ loop.index }}">
                             {% endfor %}
                         </div>
                     </div>
 
-                    <!-- 리뷰 탭 -->
-                    <div id="reviews" class="tab-content">
-                        <div class="reviews-header">
-                            <h3 class="section-title">리뷰 (3)</h3>
-                            <div class="stars">
-                                <div style="display: flex;">
-                                    <svg class="star filled" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                    </svg>
-                                    <svg class="star filled" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                    </svg>
-                                    <svg class="star filled" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                    </svg>
-                                    <svg class="star filled" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                    </svg>
-                                    <svg class="star filled" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                    </svg>
-                                </div>
-                                <span>4.7 (3)</span>
-                            </div>
-                        </div>
+<!-- 리뷰 탭 -->
+<div id="reviews" class="tab-content">
 
-                        <div class="separator"></div>
+    <!-- 리뷰 헤더 -->
+    <div class="reviews-header">
+        <h3 class="section-title">리뷰 ({{ review|length }})</h3>
 
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="avatar">김</div>
-                                <div>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 14px;">김**</span>
-                                        <span class="badge" style="font-size: 10px;">구매확인</span>
-                                    </div>
-                                    <div class="review-meta">
-                                        <div style="display: flex;">
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                        </div>
-                                        <span>2024.12.15 • 사이즈 M</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="review-content">정말 만족스러�� 제품입니다. 원단이 부드럽고 핏이 완벽해요. 추천합니다!</p>
-                        </div>
+        {# 안전한 평균 별점 계산 (0개 리뷰 시 0 처리) #}
+        {% set total_rating = review | map(attribute='rating') | sum %}
+        {% set count = review | length %}
+        {% set avg_rating = (total_rating / count) if count > 0 else 0 %}
 
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="avatar">이</div>
-                                <div>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 14px;">이**</span>
-                                        <span class="badge" style="font-size: 10px;">구매확인</span>
-                                    </div>
-                                    <div class="review-meta">
-                                        <div style="display: flex;">
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star empty" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                        </div>
-                                        <span>2024.12.10 • 사이즈 L</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="review-content">디자인이 예쁘고 색상도 ��면과 똑같아요. 다만 조금 작은 느낌이라 한 사이즈 크게 주문하시는 걸 추천해요.</p>
-                        </div>
+        <div class="stars">
+            <div style="display: flex;">
+                {% for i in range(1, 6) %}
+                    {% if i <= avg_rating|round(0, 'floor') %}
+                        <svg class="star filled" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    {% else %}
+                        <svg class="star empty" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <span>{{ avg_rating|round(1) }} ({{ review|length }})</span>
+        </div>
+    </div>
 
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="avatar">박</div>
-                                <div>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-size: 14px;">박**</span>
-                                        <span class="badge" style="font-size: 10px;">구매확인</span>
-                                    </div>
-                                    <div class="review-meta">
-                                        <div style="display: flex;">
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                            <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
-                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                            </svg>
-                                        </div>
-                                        <span>2024.12.05 • 사이즈 S</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="review-content">배송도 빠르고 품질도 좋습니다. 재구매 의사 있어요!</p>
-                        </div>
+    <div class="separator"></div>
+
+    <!-- 리뷰 목록 -->
+    {% if review|length > 0 %}
+        {% for r in review %}
+        <div class="review-item">
+            <div class="review-header">
+                <div class="avatar">{{ r.username[0] }}</div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 14px;">{{ r.username[:1] }}**</span>
+                        <span class="badge" style="font-size: 10px;">구매확인</span>
                     </div>
+                    <div class="review-meta">
+                        <div style="display: flex;">
+                            {% for i in range(1, 6) %}
+                                {% if i <= r.rating %}
+                                    <svg class="star filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                {% else %}
+                                    <svg class="star empty" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span>2025.11.07 • 사이즈 M</span> <!-- 필요하면 백엔드에서 날짜/사이즈 넘겨도 됨 -->
+                    </div>
+                </div>
+            </div>
+            <p class="review-content">{{ r.comment }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-reviews">아직 작성된 리뷰가 없습니다.</p>
+    {% endif %}
+
+</div>
+
+
                 </div>
             </div>
 
@@ -218,12 +162,7 @@
                     <!-- 가격 정보 -->
                     <div class="price-section">
                         <div class="price">
-                            <span>{{ product.price }}원</span>
-                            <span class="discount-badge">31%</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
-                            <span class="original-price">129,000원</span>
-                            <span class="discount-amount">40,000원 할인</span>
+                            <span>{{ product.price | int }}원</span>
                         </div>
                     </div>
 
@@ -284,10 +223,14 @@
     </div>
 
     <script>
+        //세션 검증
+        const user_session = '{{ user_id }}'
+        console.log("유저 세션: ",user_session)
+
         // 상품 이미지 배열
         const productImages = [
             {% for image in images %}
-                "/static{{ image.image_url }}{{ product.id }}/{{ loop.index }}.webp"{% if not loop.last %},{% endif %}
+                "/static{{ image.image_url }}"{% if not loop.last %},{% endif %}
             {% endfor %}
         ];
 
@@ -376,6 +319,7 @@
 
         // 찜하기 토글
         function toggleWishlist() {
+            if (user_session != 'None' ){
             isWishlisted = !isWishlisted;
             const heartIcon = document.getElementById('heartIcon');
             const heartPath = heartIcon.querySelector('path');
@@ -391,6 +335,10 @@
                 heartPath.setAttribute('stroke', 'currentColor');
                 heartPath.setAttribute('stroke-width', '2');
                 localStorage.setItem('isWishlisted', 'false');
+            }
+        }
+            else{
+                alert('로그인이 필요한 서비스입니다.')
             }
         }
 
@@ -426,6 +374,7 @@
         // 구매하기 버튼 클릭 이벤트
         document.getElementById('buyBtn').addEventListener('click', function() {
             if (selectedSize) {
+                if(user_session != 'None'){
                 fetch('/payment/ready',{
                      method: 'POST',
                       headers:{
@@ -452,7 +401,10 @@
                     }
                 })
 
+            }else{
+                alert('로그인이 필요한 서비스입니다.')
             }
+        }
         });
         
 

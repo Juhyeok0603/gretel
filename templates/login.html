@@ -1,27 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
+    <title>로그인 | Gretel</title>
+    <style>
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            background-color: #fff;
+            color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            width: 360px;
+            padding: 40px 40px 30px;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1.8rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        label {
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #444;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        button[type="submit"] {
+            background-color: #000;
+            color: white;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #333;
+        }
+
+        /* 카카오 로그인 버튼 */
+        .kakao-btn {
+            display: block;
+            background-color: #FEE500;
+            color: #3A1D1D;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .kakao-btn:hover {
+            background-color: #fdd835;
+        }
+
+        /* 회원가입 링크 */
+        .signup-link {
+            display: block;
+            margin-top: 18px;
+            font-size: 0.9rem;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .signup-link:hover {
+            color: #000;
+        }
+
+        /* 에러 메시지 */
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+    </style>
 </head>
 <body>
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
-    <form action="/login" method="post">
-        <label for="email">이메일:</label>
-        <input type="text" id="email" name="email" required><br><br>
-        <label for="password">비밀번호:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">로그인</button>
-    </form>
-    <button>
-        <a href="./login/kakao">
-            카카오 로그인
-        </a>
-    </button>
-    <br>
-    <a href="./sign_up">이메일로 회원가입</a>
+
+    <div class="login-container">
+        
+        <h2>로그인</h2>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form action="/login" method="post">
+            <label for="email">이메일</label>
+            <input type="text" id="email" name="email" required>
+
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">로그인</button>
+        </form>
+
+        <a href="./login/kakao" class="kakao-btn">카카오 로그인</a>
+
+        <a href="./sign_up" class="signup-link">이메일로 회원가입</a>
+    </div>
 </body>
 </html>

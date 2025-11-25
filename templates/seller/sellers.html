@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>판매자 페이지 — GreTel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/seller/sellers.css">
+</head>
+<body>
+  <div class="wrap">
+    <main class="card" role="main" aria-labelledby="seller-heading">
+      <div class="header">
+        <a href="/" class="brand" aria-label="GreTel 홈으로">
+          <div class="logo">G</div>
+          <div>
+            <h1>GreTel</h1>
+            <p>판매자 전용 대시보드</p>
+          </div>
+        </a>
+
+        <!-- 우측에 간단한 도움말 링크 (선택) -->
+        <nav aria-label="도움말">
+          <a href="/seller/guide" style="color:var(--muted); text-decoration:none; font-size:13px;">판매자 가이드 →</a>
+        </nav>
+      </div>
+
+      <h2 id="seller-heading" style="margin:0 0 6px 0; font-size:20px;">판매자 공간</h2>
+      <p class="desc">판매자 전용 대시보드입니다. 자신의 브랜드를 등록해보세요.</p>
+
+      <section class="grid" aria-label="판매자 주요 기능">
+        <a class="btn" href="/seller/seller_login" role="button" aria-label="판매자 로그인">
+          <div class="left" aria-hidden="true">🔐</div>
+          <div class="meta">
+            <div class="title">판매자 로그인</div>
+            <div class="subtitle">등록한 계정으로 대시보드에 로그인</div>
+          </div>
+        </a>
+
+        <a class="btn" href="/seller/seller_regist" role="button" aria-label="판매자 등록">
+          <div class="left" aria-hidden="true">📝</div>
+          <div class="meta">
+            <div class="title">판매자 등록</div>
+            <div class="subtitle">새로운 판매자 계정을 등록합니다</div>
+          </div>
+        </a>
+
+        <a class="btn primary" href="/seller/product_regist" role="button" aria-label="상품 등록">
+          <div class="left" aria-hidden="true">➕</div>
+          <div class="meta">
+            <div class="title">상품 등록</div>
+            <div class="subtitle">상품을 추가하고 상세 정보를 입력하세요</div>
+          </div>
+        </a>
+
+        <a class="btn" href="/seller/brand" role="button" aria-label="내 브랜드">
+          <div class="left" aria-hidden="true">🏷️</div>
+          <div class="meta">
+            <div class="title">내 브랜드</div>
+            <div class="subtitle">브랜드 정보 및 컬렉션 관리</div>
+          </div>
+        </a>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>
