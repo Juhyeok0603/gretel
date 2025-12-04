@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>판매자 센터 - 내 브랜드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white">
+    <!-- Navigation -->
+    <nav class="border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl text-black">판매자 센터</h1>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="text-gray-600 hover:text-black transition-colors">내 브랜드</a>
+                    <a href="#" class="text-gray-600 hover:text-black transition-colors">상품 관리</a>
+                    <a href="#" class="text-gray-600 hover:text-black transition-colors">주문 관리</a>
+                    <a href="#" class="text-gray-600 hover:text-black transition-colors">정산</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Brand Header -->
+        <div class="mb-8">
+            <div class="flex items-start justify-between">
+                <div class="flex gap-6">
+                    <!-- Brand Logo -->
+                    <div class="w-24 h-24 bg-gray-100 rounded-sm flex items-center justify-center">
+                        <span class="text-gray-400">LOGO</span>
+                    </div>
+                    
+                    <!-- Brand Info -->
+                    <div>
+                        <h2 class="text-2xl text-black mb-2">{{ seller }}</h2>
+                        <p class="text-gray-600 mb-3">
+                            감각적이고 미니멀한 디자인의 라이프스타일 브랜드
+                        </p>
+                        <div class="flex gap-2">
+                            <span class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm">의류</span>
+                            <span class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm">액세서리</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <button class="flex items-center gap-2 px-4 py-2 border border-gray-300 hover:bg-gray-50 transition-colors">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                        스토어 보기
+                    </button>
+                    <button class="flex items-center gap-2 px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                        정보 수정
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="border border-gray-200 p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <span class="text-gray-600">이번 달 매출</span>
+                    <i data-lucide="trending-up" class="w-5 h-5 text-gray-400"></i>
+                </div>
+                <div class="flex items-end justify-between">
+                    <span class="text-black text-2xl">₩12,450,000</span>
+                    <span class="text-sm text-green-600">+12.5%</span>
+                </div>
+            </div>
+            <div class="border border-gray-200 p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <span class="text-gray-600">총 상품 수</span>
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-gray-400"></i>
+                </div>
+                <div class="flex items-end justify-between">
+                    <span class="text-black text-2xl">47</span>
+                    <span class="text-sm text-green-600">+3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sale Request List -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title text-xl font-bold text-black">판매 요청</h2>
+            </div>
+
+            <div class="order-list grid gap-4">
+                {% for bill in bills %}
+                <div class="order-item border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <div class="order-info">
+                        <div class="order-status delivered text-sm font-medium text-green-600 mb-2">
+                            {{ bill.status }}
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-black mb-1">주문번호 #{{ bill.id }}</h3>
+
+                        <p class="order-date text-sm text-gray-500 mb-2">
+                            {{ bill.created_at.strftime("%Y-%m-%d %H:%M") }}
+                        </p>
+
+                        <p class="text-sm text-gray-700">상품 ID: {{ bill.product_id }}</p>
+                        <p class="text-sm text-gray-700">수량: {{ bill.quantity }}개</p>
+                        <p class="text-sm text-gray-700">총 금액: {{ "{:,}".format(bill.total_amount) }}원</p>
+                        <p class="text-sm text-gray-700">주문자 ID: {{ bill.user_id }}</p>
+                    </div>
+
+                    <div class="order-actions mt-4">
+                        <button class="btn-outline px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors rounded-md">
+                            상세보기
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl text-black">상품 목록</h3>
+                <button onclick="product_registration()" class="px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors">
+                    + 상품 등록
+                </button>
+            </div>
+
+            <!-- Table Header -->
+            <div class="border-t border-b border-gray-300">
+                <div class="grid grid-cols-12 gap-4 px-6 py-4 text-gray-600 text-sm">
+                    <div class="col-span-1">이미지</div>
+                    <div class="col-span-3">상품명</div>
+                    <div class="col-span-2">카테고리</div>
+                    <div class="col-span-2">판매가</div>
+                    <div class="col-span-1">재고</div>
+                    <div class="col-span-2">조회수</div>
+                    <div class="col-span-1"></div>
+                </div>
+            </div>
+
+            <!-- Table Body -->
+            <div id="productsTable"></div>
+        </div>
+    </div>
+
+    <!-- Reject Reason Modal -->
+    <div id="rejectModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white w-full max-w-md">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                <h3 class="text-xl text-black">거절 사유 선택</h3>
+                <button onclick="closeRejectModal()" class="p-2 hover:bg-gray-100 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+                <p class="text-gray-600 mb-4">
+                    <span id="rejectProductName" class="text-black"></span>의 판매 요청을 거절하시겠습니까?
+                </p>
+
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 cursor-pointer transition-colors">
+                        <input type="radio" name="reason" value="상품 이미지 품질 미달" class="w-4 h-4">
+                        <span class="text-gray-900">상품 이미지 품질 미달</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 cursor-pointer transition-colors">
+                        <input type="radio" name="reason" value="상품 설명 불충분" class="w-4 h-4">
+                        <span class="text-gray-900">상품 설명 불충분</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 cursor-pointer transition-colors">
+                        <input type="radio" name="reason" value="가격 정책 미부합" class="w-4 h-4">
+                        <span class="text-gray-900">가격 정책 미부합</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 cursor-pointer transition-colors">
+                        <input type="radio" name="reason" value="브랜드 정책 위반" class="w-4 h-4">
+                        <span class="text-gray-900">브랜드 정책 위반</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 cursor-pointer transition-colors">
+                        <input type="radio" name="reason" value="재고 증빙 미제출" class="w-4 h-4">
+                        <span class="text-gray-900">재고 증빙 미제출</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 border border-gray-200 hover:border-gray-300 cursor-pointer transition-colors">
+                        <input type="radio" name="reason" value="직접 입력" class="w-4 h-4" onchange="toggleCustomReason(this)">
+                        <span class="text-gray-900">직접 입력</span>
+                    </label>
+                </div>
+
+                <textarea id="customReason" placeholder="거절 사유를 입력하세요" rows="4" 
+                          class="w-full mt-3 px-4 py-3 border border-gray-300 focus:outline-none focus:border-black resize-none hidden"></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3 px-6 pb-6">
+                <button onclick="closeRejectModal()" class="flex-1 px-6 py-3 border border-gray-300 hover:bg-gray-50 transition-colors">
+                    취소
+                </button>
+                <button onclick="confirmReject()" class="flex-1 px-6 py-3 bg-black text-white hover:bg-gray-800 transition-colors">
+                    거절하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        let saleRequests = [
+            { id: 1, name: "슬림핏 체크 셔츠", category: "상의", price: "₩95,000", requestDate: "2024.11.20", status: "대기중" },
+            { id: 2, name: "캐시미어 블랜드 코트", category: "아우터", price: "₩289,000", requestDate: "2024.11.18", status: "승인" },
+            { id: 3, name: "레더 앵클 부츠", category: "신발", price: "₩178,000", requestDate: "2024.11.15", status: "승인" },
+            { id: 4, name: "빈티지 워싱 후디", category: "상의", price: "₩85,000", requestDate: "2024.11.12", status: "거절" },
+        ];
+
+        const products = [
+            { id: 1, name: "오버핏 코튼 셔츠", category: "상의", price: "₩89,000", stock: 45, status: "판매중", views: 1234 },
+            { id: 2, name: "와이드 데님 팬츠", category: "하의", price: "₩125,000", stock: 23, status: "판매중", views: 892 },
+            { id: 3, name: "미니멀 크로스백", category: "가방", price: "₩158,000", stock: 12, status: "판매중", views: 2341 },
+            { id: 4, name: "베이직 라운드 니트", category: "상의", price: "₩79,000", stock: 0, status: "품절", views: 567 },
+            { id: 5, name: "레더 토트백", category: "가방", price: "₩198,000", stock: 8, status: "판매중", views: 1823 },
+        ];
+
+        let currentRejectId = null;
+        let openDropdownId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            renderSaleRequests();
+            renderProducts();
+        });
+
+        // Render Sale Requests
+        function renderSaleRequests() {
+            const container = document.getElementById('saleRequestsTable');
+            container.innerHTML = saleRequests.map(request => {
+                const statusClass = getStatusClass(request.status);
+                const statusIcon = getStatusIcon(request.status);
+                
+                return `
+                    <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <div class="col-span-1">
+                            <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=100&h=100&fit=crop" 
+                                 alt="${request.name}" class="w-12 h-12 object-cover bg-gray-100">
+                        </div>
+                        <div class="col-span-3 flex items-center">
+                            <span class="text-black">${request.name}</span>
+                        </div>
+                        <div class="col-span-2 flex items-center text-gray-600">${request.category}</div>
+                        <div class="col-span-2 flex items-center text-black">${request.price}</div>
+                        <div class="col-span-2 flex items-center text-gray-600">${request.requestDate}</div>
+                        <div class="col-span-2 flex items-center relative">
+                            <button onclick="toggleDropdown(${request.id})" 
+                                    class="inline-flex items-center gap-2 px-3 py-1 border ${statusClass} hover:opacity-80 transition-opacity">
+                                <i data-lucide="${statusIcon}" class="w-4 h-4"></i>
+                                ${request.status}
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </button>
+                            <div id="dropdown-${request.id}" class="absolute top-full left-0 mt-1 bg-white border border-gray-200 shadow-lg z-10 min-w-[120px] hidden">
+                                <button onclick="changeStatus(${request.id}, '대기중', '${request.name}')" 
+                                        class="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-orange-600">
+                                    <i data-lucide="clock" class="w-4 h-4"></i>
+                                    대기중
+                                </button>
+                                <button onclick="changeStatus(${request.id}, '승인', '${request.name}')" 
+                                        class="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-green-600">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                    승인
+                                </button>
+                                <button onclick="changeStatus(${request.id}, '거절', '${request.name}')" 
+                                        class="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-red-600">
+                                    <i data-lucide="x-circle" class="w-4 h-4"></i>
+                                    거절
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // Render Products
+        function renderProducts() {
+            const container = document.getElementById('productsTable');
+            container.innerHTML = products.map(product => `
+                <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                    <div class="col-span-1">
+                        <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=100&h=100&fit=crop" 
+                             alt="${product.name}" class="w-12 h-12 object-cover bg-gray-100">
+                    </div>
+                    <div class="col-span-3 flex items-center">
+                        <span class="text-black">${product.name}</span>
+                    </div>
+                    <div class="col-span-2 flex items-center text-gray-600">${product.category}</div>
+                    <div class="col-span-2 flex items-center text-black">${product.price}</div>
+                    <div class="col-span-1 flex items-center">
+                        <span class="${product.stock === 0 ? 'text-red-600' : 'text-gray-900'}">
+                            ${product.stock === 0 ? '품절' : product.stock}
+                        </span>
+                    </div>
+                    <div class="col-span-2 flex items-center text-gray-600">${product.views.toLocaleString()}</div>
+                    <div class="col-span-1 flex items-center justify-end">
+                        <button class="p-2 hover:bg-gray-100 transition-colors">
+                            <i data-lucide="more-vertical" class="w-4 h-4 text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Status helpers
+        function getStatusClass(status) {
+            switch (status) {
+                case "대기중": return "text-orange-600 bg-orange-50 border-orange-200";
+                case "승인": return "text-green-600 bg-green-50 border-green-200";
+                case "거절": return "text-red-600 bg-red-50 border-red-200";
+                default: return "text-gray-600 bg-gray-50 border-gray-200";
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch (status) {
+                case "대기중": return "clock";
+                case "승인": return "check-circle";
+                case "거절": return "x-circle";
+                default: return "clock";
+            }
+        }
+
+        // Dropdown
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            
+            // Close other dropdowns
+            if (openDropdownId !== null && openDropdownId !== id) {
+                const prevDropdown = document.getElementById(`dropdown-${openDropdownId}`);
+                if (prevDropdown) prevDropdown.classList.add('hidden');
+            }
+            
+            dropdown.classList.toggle('hidden');
+            openDropdownId = dropdown.classList.contains('hidden') ? null : id;
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('button')) {
+                if (openDropdownId !== null) {
+                    const dropdown = document.getElementById(`dropdown-${openDropdownId}`);
+                    if (dropdown) dropdown.classList.add('hidden');
+                    openDropdownId = null;
+                }
+            }
+        });
+
+        // Change Status
+        function changeStatus(id, newStatus, productName) {
+            if (newStatus === '거절') {
+                currentRejectId = id;
+                document.getElementById('rejectProductName').textContent = productName;
+                document.getElementById('rejectModal').classList.remove('hidden');
+            } else {
+                updateStatus(id, newStatus);
+            }
+        }
+
+        function updateStatus(id, newStatus) {
+            const request = saleRequests.find(r => r.id === id);
+            if (request) {
+                request.status = newStatus;
+                renderSaleRequests();
+            }
+        }
+
+        // Reject Modal
+        function closeRejectModal() {
+            document.getElementById('rejectModal').classList.add('hidden');
+            document.querySelectorAll('input[name="reason"]').forEach(radio => radio.checked = false);
+            document.getElementById('customReason').value = '';
+            document.getElementById('customReason').classList.add('hidden');
+            currentRejectId = null;
+        }
+
+        function toggleCustomReason(radio) {
+            const customReasonField = document.getElementById('customReason');
+            if (radio.checked) {
+                customReasonField.classList.remove('hidden');
+            } else {
+                customReasonField.classList.add('hidden');
+            }
+        }
+
+        function confirmReject() {
+            const selectedReason = document.querySelector('input[name="reason"]:checked');
+            if (!selectedReason) {
+                alert('거절 사유를 선택해주세요.');
+                return;
+            }
+
+            let reason = selectedReason.value;
+            if (reason === '직접 입력') {
+                const customReason = document.getElementById('customReason').value.trim();
+                if (!customReason) {
+                    alert('거절 사유를 입력해주세요.');
+                    return;
+                }
+                reason = customReason;
+            }
+
+            console.log('거절 사유:', reason);
+            updateStatus(currentRejectId, '거절');
+            closeRejectModal();
+        }
+
+
+        function product_registration(){
+            
+        }
+    </script>
+</body>
+</html>

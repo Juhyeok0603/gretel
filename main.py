@@ -17,8 +17,12 @@ from backend.pay import router as pay_router
 # cart
 from backend.cart.cart import router as cart_router
 
+#결제
+from backend.pay_success import router as pay_success_router
+
 # seller/seller_regist
 from backend.seller.seller_regist import router as seller_regist_router
+from backend.seller.seller_login import router as seller_login_router
 
 
 app = FastAPI()
@@ -30,7 +34,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # 세션 미들웨어 설정
 from starlette.middleware.sessions import SessionMiddleware
 secret = os.getenv("SECRET_KEY")
-app.add_middleware(SessionMiddleware, secret_key=secret)
+app.add_middleware(
+    SessionMiddleware, 
+    secret_key=secret,
+    max_age=None
+    )
 
 # html 페이지 라우트
 from backend.index import index_page
@@ -49,9 +57,10 @@ async def home(request: Request):
 @app.get("/login", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
-@app.get("/payment/success", response_class=HTMLResponse)
-async def payment_success(request: Request):
-    return templates.TemplateResponse("payment/success.html", {"request": request})
+
+#결제 이후 라우트
+app.include_router(pay_success_router)
+
 @app.get("/payment/fail", response_class=HTMLResponse)
 async def payment_fail(request: Request):
     return templates.TemplateResponse("payment/fail.html", {"request": request})
@@ -67,7 +76,7 @@ async def home(request: Request):
     return templates.TemplateResponse("product_detail.html", {"request": request})
 
 # 마이페이지 라우트는 mypage.py에서
-from backend.mypage import get_user_name
+from backend.mypage.mypage import get_user_name
 @app.get("/mypage", response_class=HTMLResponse)
 async def mypage(request: Request):
     user_id = request.session.get("user_id")
@@ -76,7 +85,13 @@ async def mypage(request: Request):
     else:
         username= None
     print(username)
-    return templates.TemplateResponse("mypage.html", {"request": request, "username": username})
+    return templates.TemplateResponse("/mypage/mypage.html", {"request": request, "username": username})
+@app.get("/address", response_class=HTMLResponse)
+async def address(request: Request):
+    return templates.TemplateResponse("/mypage/address.html",{"request": request})
+# 마이페이지 - 주소 저장 라우트
+from backend.mypage.address_save import router as address_save_router
+app.include_router(address_save_router)
 
 
 from backend.products import  products_info
@@ -116,6 +131,10 @@ async def seller_regist(request:Request):
 @app.get("/seller/seller_login",response_class=HTMLResponse)
 async def seller_login(request:Request):
     return templates.TemplateResponse("seller/seller_login.html",{"request":request})
+from backend.seller.brand.mybrand import router as seller_brand_router
+app.include_router(seller_brand_router) # 판매자 페이지 라우트
+
+
 
 #라우터 등록
 app.include_router(sign_up_router)
@@ -125,3 +144,4 @@ app.include_router(cart_add_router)
 app.include_router(pay_router)
 app.include_router(cart_router)
 app.include_router(seller_regist_router)
+app.include_router(seller_login_router)

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>주소 입력</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#ffffff;
+      --accent:#000000;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: var(--bg);
+      color:#111;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+    .wrap{
+      width:90%;
+      max-width:600px;
+      border-radius:16px;
+      padding:40px;
+      background:#f8f8f8;
+      border:1px solid rgba(0,0,0,0.05);
+    }
+    .logo{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:24px;
+    }
+    .logo a{
+        text-decoration: none;
+    }
+    .logo-mark{
+      width:60px;
+      height:60px;
+      border-radius:12px;
+      background:var(--accent);
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      color:#fff;
+      font-size:24px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    }
+    h1{
+      margin:0 0 20px 0;
+      font-size:24px;
+      text-align:center;
+    }
+    .input{
+      width:100%;
+      padding:16px 18px;
+      border-radius:12px;
+      border:1px solid rgba(0,0,0,0.1);
+      margin-bottom:16px;
+      font-size:16px;
+      outline:none;
+    }
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:var(--accent);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      font-size:16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+      <a href="/"><div class="logo-mark">GT</div></a>
+    </div>
+    <h1>배송지 주소 입력</h1>
+    <input id="postcode" class="input" placeholder="우편번호" />
+    <input id="address" class="input" placeholder="배송지 주소" />
+    <input id="detail" class="input" placeholder="상세 주소" />
+    <button id="saveBtn" class="btn">저장</button>
+  </div>
+
+  <script>
+   document.getElementById('saveBtn').addEventListener('click', async () => {
+  const postcode = document.getElementById('postcode').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const detail = document.getElementById('detail').value.trim();
+
+  if (!postcode) { alert('우편번호를 입력해주세요.'); return; }
+  if (!address) { alert('주소를 입력해주세요.'); return; }
+  if (!detail) { alert('상세 주소를 입력해주세요.'); return; }
+ try {
+    const response = await fetch('/mypage/address_save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ postcode, address, detail })
+    });
+
+    const result = await response.json(); // 서버 메시지 읽기
+
+    if (!response.ok) {
+      // 서버가 오류를 반환했을 때
+      alert(`주소 저장 실패:\n${result.message}`);
+      return;
+    }
+    // 서버가 성공 메시지를 보냈을 때
+    alert(result.message); // 예: "주소가 저장되었습니다."
+    window.location.href = '/'; // 홈으로 이동
+
+  } catch (error) {
+    console.error(error);
+    alert('서버와 통신 중 오류가 발생했습니다.');
+  }
+});
+  </script>
+</body>
+</html>
