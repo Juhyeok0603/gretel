@@ -4,7 +4,7 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,       -- 사용자 고유 ID
     username VARCHAR(50) NOT NULL UNIQUE,    -- 로그인용 사용자 이름
     email VARCHAR(100) NOT NULL UNIQUE,      -- 이메일
-    password_hash VARCHAR(255) NOT NULL,     -- 비밀번호 해시
+    password VARCHAR(255) NOT NULL,     -- 비밀번호
     role ENUM('user','admin','seller') DEFAULT 'user', -- 사용자 역할
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,     -- 생성 시각
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 마지막 수정 시각
