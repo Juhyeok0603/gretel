@@ -95,7 +95,7 @@ ADD COLUMN price float NOT NULL DEFAULT 0 AFTER quantity;
 
 # seller - 판매자
 CREATE TABLE sellers (
-    id SERIAL PRIMARY KEY,                          -- 판매자 고유 ID
+    id INT NOT_NULL AUTO_INCREMENT PRIMARY KEY,                          -- 판매자 고유 ID
     brand_name VARCHAR(100) NOT NULL,               -- 브랜드명
     business_number VARCHAR(20) NOT NULL UNIQUE,    -- 사업자등록번호
     representative_name VARCHAR(50) NOT NULL,       -- 대표자 이름
