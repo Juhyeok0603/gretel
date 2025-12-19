@@ -33,4 +33,16 @@ def get_db_con():
 
 @router.get("/cart", response_class=HTMLResponse)
 async def cart(request: Request):
-    return templates.TemplateResponse("cart.html",{"request":request})
+    user_id = request.session.get("user_id")
+    if user_id:
+        print(user_id)
+        connection = get_db_con()
+        with connection.cursor() as cursor:
+            sql = "SELECT * FROM cart WHERE user_id = %s"
+            cursor.execute(sql,(user_id))
+            user_cart = cursor.fetchall()
+            print(user_cart)
+        return templates.TemplateResponse("cart.html",{"request":request, "message": user_id, "cart":user_cart})
+    else:
+        answer= "로그인이 필요합니다."
+        return templates.TemplateResponse("cart.html",{"request": request, "message": 1})

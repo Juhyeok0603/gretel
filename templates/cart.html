@@ -136,7 +136,15 @@
 
     <!-- Main Content -->
     <div class="max-w-6xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8">장바구니</h1>
+        <h1 class="text-3xl font-bold mb-8">
+
+            {% if message == 1 %}
+                로그인이 필요한 서비스입니다 </h1>
+            
+            {% else %} 
+            {{ message }} 님의 장바구니</h1>
+
+             {% endif %}
 
         <div class="grid lg:grid-cols-3 gap-8">
             <!-- Cart Items Section -->
@@ -201,49 +209,20 @@
     </div>
 
     <script>
-        // Cart data
         let cartItems = [
-            {
-                id: "1",
-                name: "베이직 라운드넥 반팔 티셔츠",
-                brand: "무신사 스탠다드",
-                option: "화이트 / L",
-                price: 19900,
-                quantity: 2,
-                imageUrl: "https://images.unsplash.com/photo-1622445270936-5dcb604970e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3aGl0ZSUyMHQtc2hpcnQlMjBmYXNoaW9ufGVufDF8fHx8MTc2Mjc4NjgwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
-                selected: true,
-            },
-            {
-                id: "2",
-                name: "오버핏 기모 후드 집업",
-                brand: "디스이즈네버댓",
-                option: "블랙 / XL",
-                price: 89000,
-                quantity: 1,
-                imageUrl: "https://images.unsplash.com/photo-1647797819874-f51a8a8fc5c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMGhvb2RpZSUyMGZhc2hpb258ZW58MXx8fHwxNzYyODUxMzE4fDA&ixlib=rb-4.1.0&q=80&w=1080",
-                selected: true,
-            },
-            {
-                id: "3",
-                name: "슬림 스트레이트 데님 팬츠",
-                brand: "커버낫",
-                option: "인디고 블루 / 32",
-                price: 79000,
-                quantity: 1,
-                imageUrl: "https://images.unsplash.com/photo-1713880442898-0f151fba5e16?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibHVlJTIwamVhbnMlMjBkZW5pbXxlbnwxfHx8fDE3NjI3NTYzMTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-                selected: true,
-            },
-            {
-                id: "4",
-                name: "클래식 레더 스니커즈",
-                brand: "컨버스",
-                option: "화이트 / 270",
-                price: 65000,
-                quantity: 1,
-                imageUrl: "https://images.unsplash.com/photo-1656944227480-98180d2a5155?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbmVha2VycyUyMHNob2VzfGVufDF8fHx8MTc2Mjc2MDk1N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-                selected: false,
-            },
-        ];
+        {% for item in cart %}
+        {
+            id: "{{ item.id }}",
+            name: "상품 {{ item.product_id }}",
+            brand: "GreTel",
+            option: "{{ item.size }}",
+            price: {{ item.price | int }},
+            quantity: {{ item.quantity }},
+            imageUrl: "https://via.placeholder.com/150",
+            selected: true
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
 
         // Render cart items
         function renderCart() {
@@ -264,17 +243,20 @@
                         onchange="toggleItem('${item.id}')"
                     >
                     
+                    <a href="/product/${item.id}">
                     <img
                         src="${item.imageUrl}"
                         alt="${item.name}"
                         class="w-24 h-24 object-cover rounded"
                     />
-
+                    </a>
                     <div class="flex-1">
                         <div class="flex justify-between">
                             <div>
                                 <p class="text-gray-600 text-sm">${item.brand}</p>
+                                <a href="/product/${item.id}">
                                 <p class="mt-1 font-medium">${item.name}</p>
+                                </a>
                                 <p class="text-sm text-gray-500 mt-1">${item.option}</p>
                             </div>
                             <button class="btn btn-ghost btn-icon h-8 w-8" onclick="removeItem('${item.id}')">
