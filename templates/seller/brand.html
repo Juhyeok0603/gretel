@@ -66,29 +66,34 @@
             </div>
         </div>
 
-        <!-- Stats Overview -->
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="border border-gray-200 p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <span class="text-gray-600">이번 달 매출</span>
-                    <i data-lucide="trending-up" class="w-5 h-5 text-gray-400"></i>
-                </div>
-                <div class="flex items-end justify-between">
-                    <span class="text-black text-2xl">₩12,450,000</span>
-                    <span class="text-sm text-green-600">+12.5%</span>
-                </div>
-            </div>
-            <div class="border border-gray-200 p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <span class="text-gray-600">총 상품 수</span>
-                    <i data-lucide="shopping-bag" class="w-5 h-5 text-gray-400"></i>
-                </div>
-                <div class="flex items-end justify-between">
-                    <span class="text-black text-2xl">47</span>
-                    <span class="text-sm text-green-600">+3</span>
-                </div>
-            </div>
+<!-- Stats Overview -->
+<div class="grid grid-cols-2 gap-4 mb-8">
+    <!-- 대기 중 상품 총액 -->
+    <div class="border border-gray-200 p-6">
+        <div class="flex items-start justify-between mb-4">
+            <span class="text-gray-600">대기 중 상품 총액</span>
+            <i data-lucide="trending-up" class="w-5 h-5 text-gray-400"></i>
         </div>
+        <div class="flex items-end justify-between">
+            <span class="text-black text-2xl">
+                ₩{{ "{:,}".format(pending_total_amount|int) }}
+            </span>
+        </div>
+    </div>
+
+    <!-- 대기 중 상품 수 -->
+    <div class="border border-gray-200 p-6">
+        <div class="flex items-start justify-between mb-4">
+            <span class="text-gray-600">대기 중 상품 수</span>
+            <i data-lucide="shopping-bag" class="w-5 h-5 text-gray-400"></i>
+        </div>
+        <div class="flex items-end justify-between">
+            <span class="text-black text-2xl">
+                {{ pending_count }}
+            </span>
+        </div>
+    </div>
+</div>
 
         <!-- Sale Request List -->
         <div class="section">

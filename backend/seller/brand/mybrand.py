@@ -35,18 +35,40 @@ def get_db_con():
         autocommit=False
     )
 
-@router.get("/seller/brand",response_class=HTMLResponse)
-async def seller_brand(request:Request):
+from decimal import Decimal
+
+@router.get("/seller/brand", response_class=HTMLResponse)
+async def seller_brand(request: Request):
     seller = request.session.get("seller")
     seller_id = request.session.get("seller_id")
-    print("seller_id:",seller_id, "seller:",seller)
+
     if not seller:
-        return HTMLResponse("<script>alert('로그인 후 이용 가능한 서비스입니다.'); window.location.href='/seller/seller_login';</script>")
-    # 판매자 페이지에 bills 정보 가져오기
+        return HTMLResponse(
+            "<script>alert('로그인 후 이용 가능한 서비스입니다.'); window.location.href='/seller/seller_login';</script>"
+        )
+
     connection = get_db_con()
     with connection.cursor() as cursor:
-        sql = "SELECT * FROM bills WHERE seller_id=%s"
+        sql = "SELECT * FROM bills WHERE seller_id=%s AND status='pending'"
         cursor.execute(sql, (seller_id,))
         bills = cursor.fetchall()
-        print("bills:", bills)
-    return templates.TemplateResponse("seller/brand.html",{"request":request, "seller":seller, "seller_id":seller_id,"bills": bills})
+
+    # ✅ 대기 중 상품 수
+    pending_count = len(bills)
+
+    # ✅ 대기 중 상품 총액
+    pending_total_amount = sum(
+        bill["total_amount"] for bill in bills
+    )
+
+    return templates.TemplateResponse(
+        "seller/brand.html",
+        {
+            "request": request,
+            "seller": seller,
+            "seller_id": seller_id,
+            "bills": bills,
+            "pending_count": pending_count,
+            "pending_total_amount": pending_total_amount
+        }
+    )
