@@ -8,3 +8,10 @@ DB
 
 # env
 .env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
