@@ -39,7 +39,7 @@ async def cart(request: Request):
         connection = get_db_con()
         with connection.cursor() as cursor:
             sql = "SELECT * FROM cart WHERE user_id = %s"
-            cursor.execute(sql,(user_id))
+            cursor.execute(sql,(user_id,))
             user_cart = cursor.fetchall()
             print(user_cart)
         return templates.TemplateResponse("cart.html",{"request":request, "message": user_id, "cart":user_cart})
