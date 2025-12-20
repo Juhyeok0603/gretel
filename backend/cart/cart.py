@@ -31,18 +31,47 @@ def get_db_con():
         autocommit=False
     )
 
+# 이미지 불러오기 함수
+import glob
+
+def get_product_image(product_id: int):
+    base_path = f"static/images/products/{product_id}/1.*"
+    files = glob.glob(base_path)
+
+    if files:
+        # static 기준 경로로 변환
+        return "/" + files[0].replace("\\", "/")
+    else:
+        return "../static/images/products/default.png"
+
+
+
 @router.get("/cart", response_class=HTMLResponse)
 async def cart(request: Request):
     user_id = request.session.get("user_id")
-    if user_id:
-        print(user_id)
-        connection = get_db_con()
-        with connection.cursor() as cursor:
-            sql = "SELECT * FROM cart WHERE user_id = %s"
-            cursor.execute(sql,(user_id,))
-            user_cart = cursor.fetchall()
-            print(user_cart)
-        return templates.TemplateResponse("cart.html",{"request":request, "message": user_id, "cart":user_cart})
-    else:
-        answer= "로그인이 필요합니다."
-        return templates.TemplateResponse("cart.html",{"request": request, "message": 1})
+    if not user_id:
+        return templates.TemplateResponse(
+            "cart.html",
+            {"request": request, "message": "로그인이 필요합니다."}
+        )
+
+    connection = get_db_con()
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM cart WHERE user_id = %s", (user_id,))
+        user_cart = cursor.fetchall()
+
+        cursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
+        user_name = cursor.fetchone()["username"]
+
+    # 🔥 여기서 이미지 경로 추가
+    for item in user_cart:
+        item["image_url"] = get_product_image(item["product_id"])
+
+    return templates.TemplateResponse(
+        "cart.html",
+        {
+            "request": request,
+            "message": user_name,
+            "cart": user_cart
+        }
+    )

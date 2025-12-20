@@ -210,19 +210,19 @@
 
     <script>
         let cartItems = [
-        {% for item in cart %}
-        {
-            id: "{{ item.id }}",
-            name: "상품 {{ item.product_id }}",
-            brand: "GreTel",
-            option: "{{ item.size }}",
-            price: {{ item.price | int }},
-            quantity: {{ item.quantity }},
-            imageUrl: "https://via.placeholder.com/150",
-            selected: true
-        }{% if not loop.last %},{% endif %}
-        {% endfor %}
-    ];
+            {% for item in cart %}
+            {
+                id: "{{ item.id }}",
+                name: "상품 {{ item.product_id }}",
+                brand: "GreTel",
+                option: "{{ item.size }}",
+                price: {{ item.price | int }},
+                quantity: {{ item.quantity }},
+                imageUrl: "{{ item.image_url }}",
+                selected: true
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
 
         // Render cart items
         function renderCart() {
