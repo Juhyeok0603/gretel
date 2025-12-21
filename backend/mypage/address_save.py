@@ -38,6 +38,8 @@ def get_db_con():
 async def address_save(request: Request):
     try:
         userid= request.session.get("user_id")
+        if not userid:
+            return {"message":"로그인 후 이용 가능한 서비스입니다."}
         data = await request.json()
         print(data["postcode"])
         postcode = data["postcode"] # 우편번호
