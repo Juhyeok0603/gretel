@@ -80,6 +80,7 @@ from backend.mypage.mypage import get_user_name
 @app.get("/mypage", response_class=HTMLResponse)
 async def mypage(request: Request):
     user_id = request.session.get("user_id")
+    print(f"user_id:{user_id}")
     if user_id:
         username = get_user_name(user_id)
     else:
