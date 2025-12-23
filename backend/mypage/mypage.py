@@ -20,31 +20,34 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 
-connection=pymysql.connect(
-    host=DB_HOST,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    database=DB_NAME,
-    charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
-)
-
-cursor = connection.cursor()
+# DB 연결
+def get_db_con():
+    return pymysql.connect(
+        host=DB_HOST,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME,
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor,
+        autocommit=False
+    )
 
 # 템플릿 설정
 templates = Jinja2Templates(directory="templates")
 
 
 def get_user_name(user_id: int):
-    try:
-        sql = "SELECT username FROM users WHERE id=%s"
-        cursor.execute(sql, (user_id,))
-        result = cursor.fetchone()
-        username = result['username']
-        connection.close()
-        if result:
-            return username
-        return None
-    except Exception as e:
-        print(f"Error fetching username: {e}")
-        return None
+    connection = get_db_con()
+    with connection.cursor() as cursor:
+        try:
+            sql = "SELECT username FROM users WHERE id=%s"
+            cursor.execute(sql, (user_id,))
+            result = cursor.fetchone()
+            username = result['username']
+            connection.close()
+            if result:
+                return username
+            return None
+        except Exception as e:
+            print(f"Error fetching username: {e}")
+            return None
