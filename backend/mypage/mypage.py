@@ -41,6 +41,7 @@ def get_user_name(user_id: int):
         cursor.execute(sql, (user_id,))
         result = cursor.fetchone()
         username = result['username']
+        connection.close()
         if result:
             return username
         return None
