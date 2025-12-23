@@ -120,6 +120,9 @@ async def logout(request: Request):
     except Exception as e:
         print(f"Error during logout: {e}")
         return HTMLResponse(content="<script>alert('로그아웃 실패'); window.location.href = './';</script>")
+    finally:
+        if connection:
+            connection.close()
 
 # 카카오 로그인 라우트
 @router.get("/login/kakao")
