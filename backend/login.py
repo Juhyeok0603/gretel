@@ -72,6 +72,9 @@ async def login(
     except Exception as e:
         print(f"Error: {e}")
         return HTMLResponse( login_fail)
+    finally:
+        if connection:
+            connection.close()
     try:
         pw_sql="SELECT id,username,password,id FROM users WHERE email=%s"
         connection = get_db_con()
@@ -90,6 +93,9 @@ async def login(
     except Exception as e:
         print(f"Error: {e}")
         return HTMLResponse( content="<script>alert('로그인 실패'); window.location.href = '/login';</script>")
+    finally:
+        if connection:
+            connection.close()
 
 
 @router.get("/logout")
